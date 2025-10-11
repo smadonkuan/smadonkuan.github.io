@@ -1,36 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>首次發文 on 依璇的測試</title>
-        <link>https://smadonkuan.github.io/tags/%E9%A6%96%E6%AC%A1%E7%99%BC%E6%96%87/</link>
-        <description>Recent content in 首次發文 on 依璇的測試</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-tw</language>
-        <copyright>smadonkuan</copyright>
-        <lastBuildDate>Fri, 10 Oct 2025 22:41:07 +0800</lastBuildDate><atom:link href="https://smadonkuan.github.io/tags/%E9%A6%96%E6%AC%A1%E7%99%BC%E6%96%87/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>My First Post 第一個頁面誕生日</title>
-        <link>https://smadonkuan.github.io/posts/my-first-post/</link>
-        <pubDate>Fri, 10 Oct 2025 22:41:07 +0800</pubDate>
-        
-        <guid>https://smadonkuan.github.io/posts/my-first-post/</guid>
-        <description>&lt;h1 id=&#34;歡迎光臨&#34;&gt;歡迎光臨
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>首次發文 on Hi ! I'm Elaine</title><link>https://smadonkuan.github.io/tags/%E9%A6%96%E6%AC%A1%E7%99%BC%E6%96%87/</link><description>Recent content in 首次發文 on Hi ! I'm Elaine</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><copyright>smadonkuan</copyright><lastBuildDate>Fri, 10 Oct 2025 22:41:07 +0800</lastBuildDate><atom:link href="https://smadonkuan.github.io/tags/%E9%A6%96%E6%AC%A1%E7%99%BC%E6%96%87/index.xml" rel="self" type="application/rss+xml"/><item><title>My First Post 第一個頁面誕生日</title><link>https://smadonkuan.github.io/posts/my-first-post/</link><pubDate>Fri, 10 Oct 2025 22:41:07 +0800</pubDate><guid>https://smadonkuan.github.io/posts/my-first-post/</guid><description>&lt;h1 id="歡迎光臨"&gt;歡迎光臨
 &lt;/h1&gt;&lt;p&gt;今天是這個網站的&lt;strong&gt;頁面誕生日&lt;/strong&gt;！&lt;/p&gt;
-&lt;h2 id=&#34;第一次學習&#34;&gt;第一次學習
+&lt;h2 id="第一次學習"&gt;第一次學習
 &lt;/h2&gt;&lt;p&gt;用 &lt;strong&gt;Hugo、Stack 主題&lt;/strong&gt;和 &lt;strong&gt;GitHub Pages&lt;/strong&gt; 架設&lt;/p&gt;
 &lt;p&gt;雖然我還不知道怎麼佈置，而且所有功能都像剛從 IKEA 搬回來的零件一樣散落一地，但它上線了！
 既然都上線了，就要來測試一下最基本的禮儀：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;hr&gt;
-&lt;h3 id=&#34;生日快樂&#34;&gt;生日快樂！🎂
-&lt;/h3&gt;</description>
-        </item>
-        
-    </channel>
-</rss>
+&lt;h3 id="生日快樂"&gt;生日快樂！🎂
+&lt;/h3&gt;</description></item></channel></rss>

@@ -1,0 +1,4 @@
+Django==4.2.26
+gunicorn==21.2.0
+markdown==3.5.1
+Pillow==10.0.0

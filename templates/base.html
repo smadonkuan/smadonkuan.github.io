@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}myblog{% endblock %}</title>
+    <style>
+        /* ===== 全域重置 ===== */
+        /* 移除所有預設邊距和內距，統一管理 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* ===== 主體樣式 ===== */
+        /* 白色背景 + 深灰文字 = 清楚易讀 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #ffffff;        /* 白色背景 */
+            color: #000000;             /* 深灰文字 */
+            line-height: 1.6;           /* 行距 */
+            min-height: 100vh;          /* 至少佔滿一個螢幕 */
+        }
+        
+        /* ===== 主容器布局 ===== */
+        /* 左邊欄 (320px固定) + 右邊內容 (自動) */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 320px 1fr;   /* 左邊固定寬度，右邊自動撐滿 */
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* ===== 左側邊欄 (個人資訊) ===== */
+        aside {
+            background: #f8f9fa;                /* 淡灰色背景 */
+            border-right: 1px solid #e0e0e0;   /* 右邊界線 */
+            padding: 60px 40px;
+            position: sticky;                   /* 向下滾動時固定在頂部 */
+            top: 0;
+            height: 100vh;                      /* 佔滿螢幕高度 */
+            overflow-y: auto;                   /* 內容超過可以滾動 */
+        }
+        
+        /* ===== 個人資訊區塊 ===== */
+        .profile {
+            text-align: center;
+        }
+        
+        /* ===== 頭像圓形 ===== */
+        /* 漸層顏色 + 圓形 + 發光效果 = 吸引人 */
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #0099ff, #00d4ff);  /* 藍色漸層 */
+            border-radius: 50%;                 /* 正圓形 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 153, 255, 0.2);  /* 發光效果 */
+        }
+        
+        /* ===== 名字標題 ===== */
+        .profile h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #000;
+        }
+        
+        /* ===== 職位標籤 ===== */
+        /* 小寫，淡灰色，全大寫字母間距 */
+        .profile .title {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;        /* 字母間距 */
+            text-transform: uppercase;  /* 全大寫 */
+        }
+        
+        /* ===== 自我介紹文字 ===== */
+        .bio {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;  /* 下方分隔線 */
+            padding-bottom: 30px;
+        }
+        
+        /* ===== 統計數據區 (專案數、文章數) ===== */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;    /* 兩欄平分 */
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        /* ===== 單個統計項目 ===== */
+        .stat-item {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        /* ===== 統計數字 (大且藍色) ===== */
+        .stat-item .number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0099ff;             /* 藍色強調 */
+            margin-bottom: 5px;
+        }
+        
+        /* ===== 統計標籤 (小且淡) ===== */
+        .stat-item .label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ===== 技能區塊 ===== */
+        .skills {
+            margin-bottom: 40px;
+        }
+        
+        /* ===== 技能標題 ===== */
+        .skills h3 {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        /* ===== 技能標籤容器 ===== */
+        /* 彈性佈局，多個標籤自動換行 */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;            /* 自動換行 */
+            gap: 8px;
+        }
+        
+        /* ===== 單個技能標籤 ===== */
+        /* 藍色邊框 + 懸停時填滿藍色背景 */
+        .skill-tag {
+            background: #fff;
+            border: 1px solid #0099ff;
+            color: #0099ff;
+            padding: 6px 12px;
+            border-radius: 20px;        /* 藥丸形 */
+            font-size: 11px;
+            transition: all 0.3s;       /* 平滑過渡動畫 */
+        }
+        
+        /* 懸停效果：反轉顏色 */
+        .skill-tag:hover {
+            background: #0099ff;        /* 藍色背景 */
+            color: white;               /* 白色文字 */
+        }
+        
+        /* ===== 社交媒體連結區 ===== */
+        .social {
+            display: flex;
+            gap: 12px;
+            justify-content: center;    /* 置中 */
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;  /* 上方分隔線 */
+        }
+        
+        /* ===== 社交媒體圖標 ===== */
+        /* 圓形按鈕，懸停變藍 */
+        .social a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;         /* 圓形 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0099ff;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        /* 懸停效果 */
+        .social a:hover {
+            background: #0099ff;        /* 藍色背景 */
+            color: white;
+            border-color: #0099ff;
+        }
+        
+        /* ===== 主內容區域 ===== */
+        main {
+            padding: 60px 80px;
+            overflow-y: auto;           /* 內容超過可以滾動 */
+            background: #ffffff;        /* 白色背景 */
+        }
+        
+        /* ===== 導航標籤 (Home/Projects/Blog) ===== */
+        .nav-tabs {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 80px;
+            border-bottom: 1px solid #e0e0e0;  /* 下方分隔線 */
+            padding-bottom: 20px;
+        }
+        
+        /* ===== 單個導航標籤 ===== */
+        /* 淡灰色，懸停和激活時變藍 */
+        .nav-tab {
+            color: #999;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        /* 懸停和激活狀態：變藍色 */
+        .nav-tab:hover,
+        .nav-tab.active {
+            color: #0099ff;
+        }
+        
+        /* 激活標籤下方有藍色底線 */
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;              /* 在下方 */
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #0099ff;        /* 藍色線 */
+        }
+        
+        /* ===== 頁面大標題 ===== */
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: #000;
+        }
+        
+        /* ===== 內容卡片 (專案/部落格) ===== */
+        /* 白色背景 + 淡邊框，懸停時變藍並浮起 */
+        .project-card, .blog-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s;       /* 平滑過渡 */
+        }
+        
+        /* 卡片懸停效果：邊框變藍 + 陰影 + 浮起 */
+        .project-card:hover, .blog-card:hover {
+            border-color: #0099ff;      /* 邊框變藍 */
+            box-shadow: 0 4px 15px rgba(0, 153, 255, 0.1);  /* 淡藍陰影 */
+            transform: translateY(-2px);  /* 向上移動 2px */
+        }
+        
+        /* ===== 卡片標題 ===== */
+        .project-card h3, .blog-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+        
+        /* ===== 卡片日期 ===== */
+        .project-meta {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+        
+        /* ===== 卡片描述文字 ===== */
+        .project-card p, .blog-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;           /* 寬行距易讀 */
+            margin-bottom: 15px;
+        }
+        
+        /* ===== 技術棧標籤 ===== */
+        /* 多個標籤並排顯示 */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;            /* 自動換行 */
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        /* ===== 單個技術標籤 ===== */
+        /* 淡藍背景 + 藍色邊框 + 藍色文字 */
+        .tech-badge {
+            background: #f5f5f5;        /* 背景顏色 */
+            border: 1px solid #d0e0ff;  /* 邊框顏色 */
+            color: #3f3e3e;             /* 文字文色 */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* ===== 卡片底部按鈕群 ===== */
+        .card-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        /* ===== 按鈕樣式 ===== */
+        /* 藍色邊框 + 藍色文字，懸停時變藍色背景 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid #0099ff;  /* 藍色邊框 */
+            color: #0099ff;             /* 藍色文字 */
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.3s;       /* 平滑過渡 */
+        }
+        
+        /* 按鈕懸停效果：藍色背景 + 白色文字 */
+        .btn:hover {
+            background: #0099ff;        /* 藍色背景 */
+            color: white;               /* 白色文字 */
+        }
+        
+        /* ===== Featured 標籤 ===== */
+        /* 藍色背景 + 白色文字，表示精選 */
+        .featured-label {
+            display: inline-block;
+            background: #0099ff;        /* 藍色背景 */
+            color: white;               /* 白色文字 */
+            padding: 4px 10px;
+            border-radius: 20px;        /* 藥丸形 */
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ===== 分頁導航 ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;    /* 置中 */
+            gap: 10px;
+            margin-top: 60px;
+        }
+        
+        /* ===== 分頁按鈕和數字 ===== */
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            color: #0099ff;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        /* 分頁按鈕懸停效果 */
+        .pagination a:hover {
+            border-color: #0099ff;      /* 邊框變藍 */
+            background: #f8f9fa;        /* 淡灰背景 */
+        }
+        
+        /* ===== 手機適配 (768px以下) ===== */
+        /* 將雙欄改成單欄，側邊欄在上 */
+        @media (max-width: 768px) {
+            .wrapper {
+                grid-template-columns: 1fr;  /* 單欄 */
+            }
+            aside {
+                position: static;              /* 取消固定 */
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;  /* 下方分隔線 */
+                padding: 40px 20px;
+            }
+            main {
+                padding: 40px 20px;            /* 縮小邊距 */
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <!-- ===== 左側邊欄：個人資訊 ===== -->
+        <aside>
+            <div class="profile">
+                <!-- 頭像 -->
+                <div class="avatar">YN</div>
+                <!-- 名字 -->
+                <h1>呂依璇 Elaine Lu</h1>
+                <!-- 職位 -->
+                <p class="title">Information Security Researcher</p>
+                <!-- 自我介紹 -->
+                <p class="bio">Always learning, always growing.</p>
+            </div>
+        
+            <!-- 統計數據 -->
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="number">{{ projects_count }}</div>
+                    <div class="label">Projects</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">{{ posts_count }}</div>
+                    <div class="label">Blog Posts</div>
+                </div> 
+            </div>
+            
+            <!-- 技能標籤 -->
+            <div class="skills">
+                <h3>Tech Stack</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Django</span>
+                    <span class="skill-tag">Windows Security</span>
+                    <span class="skill-tag">Linux</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">AWS</span>
+                </div>
+            </div>
+            
+            <!-- 社交媒體連結 -->
+            <div class="social">
+                <a href="https://github.com/smadonkuan" target="_blank" title="GitHub">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="mailto:elainelu0813@gmail.com" title="Email">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- ===== 主內容區域 ===== -->
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

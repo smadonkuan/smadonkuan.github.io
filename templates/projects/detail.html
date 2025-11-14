@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} - myblog{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 40px;">
+    <a href="/projects/" style="color: #00d4ff; text-decoration: none; font-size: 14px;">← Back to Projects</a>
+</div>
+
+<article>
+    <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 20px; color: white;">{{ project.title }}</h1>
+    
+    <p class="project-meta">{{ project.created_at|date:"F d, Y" }}</p>
+    
+    <div class="tech-stack" style="margin: 30px 0;">
+        {% for tech in project.get_technologies %}
+        <span class="tech-badge">{{ tech }}</span>
+        {% endfor %}
+    </div>
+    
+    <div style="margin: 60px 0; color: #b0b0b0; line-height: 1.9; font-size: 15px;">
+        {{ project.description|linebreaks }}
+    </div>
+    
+    <div class="card-links" style="margin: 60px 0;">
+        <a href="{{ project.github_url }}" target="_blank" class="btn">View on GitHub →</a>
+        {% if project.demo_url %}
+        <a href="{{ project.demo_url }}" target="_blank" class="btn">Live Demo →</a>
+        {% endif %}
+    </div>
+    
+    <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 40px; margin-top: 80px;">
+        <a href="/projects/" class="btn">← Back to Projects</a>
+    </div>
+</article>
+{% endblock %}

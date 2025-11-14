@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - myblog{% endblock %}
+
+<!-- ===== 文章內容特殊樣式 ===== -->
+{% block extra_css %}
+<style>
+    /* ===== 代碼塊樣式 ===== */
+    pre {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        overflow-x: auto;
+        margin: 20px 0;
+    }
+    
+    /* ===== 程式碼字體 ===== */
+    code {
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    /* ===== 段落 ===== */
+    p {
+        margin-bottom: 15px;
+        color: #000000;
+    }
+    
+    /* ===== 二級標題 ===== */
+    h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: #000000;
+        border-bottom: 2px solid #0099ff;
+        padding-bottom: 10px;
+    }
+    
+    /* ===== 三級標題 ===== */
+    h3 {
+        font-size: 17px;
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #000;
+    }
+    
+    /* ===== 列表 ===== */
+    ul, ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+    }
+    
+    li {
+        margin-bottom: 8px;
+        color: #666;
+    }
+    
+    /* ===== 表格 ===== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    
+    th, td {
+        border: 1px solid #e0e0e0;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    th {
+        background: #f5f5f5;
+        font-weight: 600;
+    }
+    
+    /* ===== 引用區塊 ===== */
+    blockquote {
+        border-left: 4px solid #0099ff;
+        padding-left: 20px;
+        margin-left: 0;
+        color: #999;
+        font-style: italic;
+    }
+    
+    hr {
+        border: none;
+        border-top: 1px solid #e0e0e0;
+        margin: 30px 0;
+    }
+    
+    /* ===== 文章布局：左內容 + 右目錄 ===== */
+    .article-container {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 40px;
+    }
+    
+    /* ===== 右邊目錄樣式 ===== */
+    /* sticky = 滾動時會固定在頂部 */
+    .toc {
+        background: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        position: sticky;      /* 重點：sticky 會跟著滾動 */
+        top: 20px;             /* 距頂部 20px 時固定 */
+        max-height: calc(100vh - 40px);  /* 不超過螢幕高度 */
+        overflow-y: auto;      /* 內容過多可滾動 */
+        font-size: 13px;
+    }
+    
+    .toc h4 {
+        margin: 0 0 15px 0;
+        font-size: 14px;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .toc ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .toc li {
+        margin-bottom: 8px;
+        color: #666;
+    }
+    
+    .toc a {
+        color: #0099ff;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .toc a:hover {
+        color: #E8714C;
+        margin-left: 5px;
+    }
+    
+    /* 二級目錄 */
+    .toc ul ul {
+        margin-left: 15px;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-left: 2px solid #e0e0e0;
+    }
+    
+    /* 手機版適配 */
+    @media (max-width: 1024px) {
+        .article-container {
+            grid-template-columns: 1fr;
+        }
+        .toc {
+            position: static;
+            max-height: none;
+            margin-bottom: 40px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== 返回按鈕 ===== -->
+<div style="margin-bottom: 40px;">
+    <a href="/blog/" style="color: #0099ff; text-decoration: none; font-size: 14px;">← Back to Blog</a>
+</div>
+
+<!-- ===== 文章 + 目錄容器 ===== -->
+<div class="article-container">
+    
+    <!-- 左邊：文章內容 -->
+    <article>
+        <!-- ===== 文章標題 ===== -->
+        <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 20px; color: #000;">{{ post.title }}</h1>
+        
+        <!-- ===== 發布時間和更新時間 ===== -->
+        <div style="color: #999; font-size: 14px; margin-bottom: 30px;">
+            {{ post.created_at|date:"F d, Y" }}
+            {% if post.updated_at != post.created_at %}
+            · Updated {{ post.updated_at|date:"F d, Y" }}
+            {% endif %}
+        </div>
+        
+        <!-- ===== 標籤 ===== -->
+        <div class="tech-stack" style="margin-bottom: 50px;">
+            {% for tag in post.get_tags %}
+            <span class="tech-badge">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        
+        <!-- ===== 文章內容 ===== -->
+        <!-- markdown 自動轉成 HTML，|safe 表示允許 HTML 標籤 -->
+        <div style="margin: 60px 0; color: #666; line-height: 1.9; font-size: 15px;">
+            {{ post.get_content_html|safe }}
+        </div>
+        
+        <!-- ===== 返回連結 ===== -->
+        <div style="border-top: 1px solid #e0e0e0; padding-top: 40px; margin-top: 80px;">
+            <a href="/blog/" class="btn">← Back to Blog</a>
+        </div>
+    </article>
+    
+    <!-- 右邊：目錄 -->
+    <aside class="toc" id="toc-container">
+        <h4>📋 目錄</h4>
+        <ul id="toc-list">
+            <!-- JavaScript 會自動填充這裡 -->
+        </ul>
+    </aside>
+    
+</div>
+
+<!-- ===== JavaScript：自動生成目錄 ===== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const article = document.querySelector('article');
+    const tocList = document.getElementById('toc-list');
+    
+    // 掃描所有 h2 和 h3 標題
+    const headings = article.querySelectorAll('h2, h3');
+    
+    if (headings.length === 0) {
+        document.getElementById('toc-container').style.display = 'none';
+        return;
+    }
+    
+    tocList.innerHTML = '';
+    let lastH2Li = null;
+    let currentUL = tocList;
+    
+    headings.forEach((heading, index) => {
+        // 給標題加 id
+        if (!heading.id) {
+            heading.id = `heading-${index}`;
+        }
+        
+        const level = heading.tagName; // 'H2' 或 'H3'
+        const text = heading.textContent;
+        
+        // 建立目錄項目
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${heading.id}`;
+        a.textContent = text;
+        li.appendChild(a);
+        
+        if (level === 'H2') {
+            // 是 h2：加到主列表
+            tocList.appendChild(li);
+            lastH2Li = li;
+            currentUL = tocList;
+        } else if (level === 'H3') {
+            // 是 h3：如果前面有 h2，就加為子項
+            if (lastH2Li) {
+                // 如果子列表還不存在，就建立
+                if (!lastH2Li.querySelector('ul')) {
+                    const subUL = document.createElement('ul');
+                    lastH2Li.appendChild(subUL);
+                }
+                lastH2Li.querySelector('ul').appendChild(li);
+            } else {
+                // 如果沒有前面的 h2，就直接加到主列表
+                tocList.appendChild(li);
+            }
+        }
+    });
+});
+</script>
+
+{% endblock %}

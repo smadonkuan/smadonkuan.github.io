@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+<!-- 頁面標題（瀏覽器頁籤） -->
+{% block title %}Blog - myblog{% endblock %}
+
+{% block content %}
+
+<!-- 導航選單：Home / Projects / Blog -->
+<!-- active 表示目前在 Blog 頁面（會顯示藍色底線） -->
+<div class="nav-tabs">
+    <a href="/" class="nav-tab">Home</a>
+    <a href="/projects/" class="nav-tab">Projects</a>
+    <a href="/blog/" class="nav-tab active">Blog</a>
+</div>
+
+<!-- 頁面大標題 -->
+<h2 class="section-title">Blog</h2>
+
+<!-- 文章列表迴圈 -->
+<!-- page_obj：從 views.py 傳來的分頁物件，包含這一頁的所有文章 -->
+{% for post in page_obj %}
+<div class="blog-card">
+    <!-- 文章標題（黑色，點擊進入文章） -->
+    <!-- post.slug：文章的 URL 名稱，例如 race-condition-guide -->
+    <h3><a href="{% url 'blog:detail' post.slug %}" style="color:#000; text-decoration: none;">{{ post.title }}</a></h3>
+    
+    <!-- 發布日期，格式：Nov 14, 2025 -->
+    <p class="project-meta">{{ post.created_at|date:"M d, Y" }}</p>
+    
+    <!-- 文章摘要（灰色小字，吸引讀者點進去） -->
+    <p style="color: #aaa; font-size: 14px; line-height: 1.7; margin-bottom: 15px;">{{ post.excerpt }}</p>
+    
+    <!-- 文章標籤（例如：Python, Django, 並發程式設計） -->
+    <!-- post.get_tags()：把逗號分隔的標籤變成陣列 -->
+    <div class="tech-stack">
+        {% for tag in post.get_tags %}
+        <span class="tech-badge">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    
+    <!-- 「閱讀文章」按鈕 -->
+    <div class="card-links">
+        <a href="{% url 'blog:detail' post.slug %}" class="btn">Read Article →</a>
+    </div>
+</div>
+{% empty %}
+<!-- 沒有文章時的提示 -->
+<p style="color: #666; text-align: center; padding: 60px 0;">No articles yet.</p>
+{% endfor %}
+
+<!-- 分頁導航（只有多於一頁時才顯示） -->
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    <!-- 上一頁按鈕（has_previous = 有上一頁時才顯示） -->
+    {% if page_obj.has_previous %}
+        <!-- « First：跳到第 1 頁 -->
+        <a href="?page=1">« First</a>
+        <!-- ‹ Previous：回到上一頁 -->
+        <a href="?page={{ page_obj.previous_page_number }}">‹ Previous</a>
+    {% endif %}
+    
+    <!-- 頁碼顯示，例如：Page 2 of 5 -->
+    <span style="color: #888;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    
+    <!-- 下一頁按鈕（has_next = 有下一頁時才顯示） -->
+    {% if page_obj.has_next %}
+        <!-- Next ›：進到下一頁 -->
+        <a href="?page={{ page_obj.next_page_number }}">Next ›</a>
+        <!-- Last »：跳到最後一頁 -->
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last »</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

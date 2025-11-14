@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+
+<!-- 頁面標題（瀏覽器頁籤顯示） -->
+{% block title %}Home - Information Security Researcher{% endblock %}
+
+<!-- 首頁自訂樣式 -->
+{% block extra_css %}
+<style>
+    /* ===== 關於我區塊樣式 ===== */
+    /* 頂部藍色漸層背景，展示個人信息 */
+    .about-me {
+        background: linear-gradient(135deg, #1A3A52 0%, #2D5A7F 100%);  /* 深藍漸層 = 信任感 */
+        color: white;
+        padding: 120px 80px;
+        text-align: center;
+        margin: 0 0 80px 0;
+    }
+    
+    /* 名字標題 */
+    .about-me h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    /* 職位標題（珊瑚紅 = 吸引注意） */
+    .about-me .tagline {
+        font-size: 20px;
+        color: #E8714C;
+        margin-bottom: 40px;
+        font-weight: 500;
+    }
+    
+    /* 自我介紹文字 */
+    .about-me .description {
+        font-size: 16px;
+        color: #E8E8E8;
+        max-width: 600px;
+        margin: 0 auto 50px;
+        line-height: 1.8;
+    }
+    
+    /* 按鈕容器 */
+    .about-me-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* 主要按鈕（珊瑚紅） */
+    .btn-primary {
+        padding: 14px 32px;
+        background: #E8714C;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    /* 主要按鈕懸停效果 */
+    .btn-primary:hover {
+        background: #D45A38;
+        transform: translateY(-2px);
+    }
+    
+    /* 次要按鈕（白邊框） */
+    .btn-secondary {
+        padding: 14px 32px;
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    /* 次要按鈕懸停效果 */
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    /* ===== 區塊間距 ===== */
+    /* 每個主要內容區塊下方都有空間 */
+    .content-section {
+        margin-bottom: 100px;
+    }
+    
+    /* ===== 合作邀請區域 ===== */
+    /* 珊瑚紅漸層，強烈吸引注意力 */
+    .cta-banner {
+        background: linear-gradient(135deg, #E8714C 0%, #D45A38 100%);  /* 珊瑚紅漸層 = 高注目度 */
+        color: white;
+        padding: 80px 40px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 100px 0;
+    }
+    
+    /* 合作邀請的大標題 */
+    .cta-banner h2 {
+        font-size: 40px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    /* 合作邀請的副標題 */
+    .cta-banner p {
+        font-size: 18px;
+        margin-bottom: 40px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
+    }
+    
+    /* 聯繫按鈕容器 */
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* 聯繫按鈕基礎樣式 */
+    .cta-btn {
+        padding: 14px 32px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    /* Email 按鈕（白底珊瑚紅字） */
+    .cta-btn-email {
+        background: white;
+        color: #E8714C;
+    }
+    
+    /* Email 按鈕懸停效果 */
+    .cta-btn-email:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* GitHub 按鈕（透明背景白邊框） */
+    .cta-btn-github {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+    
+    /* GitHub 按鈕懸停效果 */
+    .cta-btn-github:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-3px);
+    }
+    
+    /* ===== 手機版適配 ===== */
+    @media (max-width: 768px) {
+        .about-me {
+            padding: 60px 20px;
+        }
+        .about-me h1 {
+            font-size: 32px;
+        }
+        .cta-banner {
+            padding: 60px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== 關於我區塊 ===== -->
+<!-- 第一眼看到的地方，展示你是誰 -->
+<div class="about-me">
+    <!-- 你的名字 -->
+    <h1>呂依璇 Elaine Lu</h1>
+    
+    <!-- 職位/身份（珊瑚紅色吸引注意） -->
+    <p class="tagline">Information Security Researcher</p>
+    
+    <!-- 簡短自介 -->
+    <p class="description">
+        研究資安議題<br>
+    </p>
+    
+    <!-- 行動按鈕 -->
+    <div class="about-me-buttons">
+        <!-- 查看作品按鈕 -->
+        <a href="/projects/" class="btn-primary">查看我的作品</a>
+        <!-- 聯繫我按鈕 -->
+        <a href="#contact" class="btn-secondary">聯繫我</a>
+    </div>
+</div>
+
+<!-- ===== 精選專案區域 ===== -->
+<section class="content-section">
+    <!-- 區域標題 -->
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h2 class="section-title">精選專案</h2>
+        <p style="color: #666; font-size: 16px;">展示最具代表性的研究項目和開源貢獻</p>
+    </div>
+    
+    <!-- 專案卡片網格（2 欄） -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+        <!-- 如果有精選專案，迴圈顯示 -->
+        {% if featured_projects %}
+            {% for project in featured_projects %}
+            <!-- 單個專案卡片 -->
+            <div class="item-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; transition: all 0.3s;">
+                <!-- 卡片頭部：標題 + 日期 -->
+                <div style="background: #f8f9fa; padding: 20px; border-bottom: 3px solid #2D8B7F;">
+                    <h3 style="color: #1A3A52; font-size: 18px; margin: 0 0 8px 0;">{{ project.title }}</h3>
+                    <p style="font-size: 12px; color: #999; margin: 0;">{{ project.created_at|date:"M d, Y" }}</p>
+                </div>
+                <!-- 卡片內容：描述 + 標籤 + 連結 -->
+                <div style="padding: 25px;">
+                    <!-- 專案描述（截短至 30 字） -->
+                    <p style="color: #666; font-size: 14px; line-height: 1.7; margin-bottom: 20px;">{{ project.description|truncatewords:30 }}</p>
+                    <!-- 技術標籤 -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                        {% for tech in project.get_technologies %}
+                        <span style="background: #f0f4ff; color: #2D5A7F; padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: 500;">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <!-- 查看詳情連結 -->
+                    <a href="{% url 'projects:detail' project.slug %}" style="color: #E8714C; text-decoration: none; font-weight: 600;">查看項目 →</a>
+                </div>
+            </div>
+            {% endfor %}
+        <!-- 如果沒有專案 -->
+        {% else %}
+            <p style="color: #999; text-align: center; grid-column: 1/-1;">暫無專案</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ===== 最新文章區域 ===== -->
+<section class="content-section">
+    <!-- 區域標題 -->
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h2 class="section-title">最新文章</h2>
+        <p style="color: #666; font-size: 16px;">最近分享的資安研究和技術洞察</p>
+    </div>
+    
+    <!-- 文章卡片網格（2 欄） -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+        <!-- 如果有文章，迴圈顯示 -->
+        {% if page_obj %}
+            {% for post in page_obj %}
+            <!-- 單篇文章卡片 -->
+            <div class="item-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; transition: all 0.3s;">
+                <!-- 卡片頭部：標題 + 日期 -->
+                <div style="background: #f8f9fa; padding: 20px; border-bottom: 3px solid #2D8B7F;">
+                    <h3 style="color: #1A3A52; font-size: 18px; margin: 0 0 8px 0;">{{ post.title }}</h3>
+                    <p style="font-size: 12px; color: #999; margin: 0;">{{ post.created_at|date:"M d, Y" }}</p>
+                </div>
+                <!-- 卡片內容：摘要 + 標籤 + 連結 -->
+                <div style="padding: 25px;">
+                    <!-- 文章摘要 -->
+                    <p style="color: #666; font-size: 14px; line-height: 1.7; margin-bottom: 20px;">{{ post.excerpt }}</p>
+                    <!-- 文章標籤 -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                        {% for tag in post.get_tags %}
+                        <span style="background: #f0f4ff; color: #2D5A7F; padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: 500;">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <!-- 閱讀文章連結 -->
+                    <a href="{% url 'blog:detail' post.slug %}" style="color: #E8714C; text-decoration: none; font-weight: 600;">閱讀文章 →</a>
+                </div>
+            </div>
+            {% endfor %}
+        <!-- 如果沒有文章 -->
+        {% else %}
+            <p style="color: #999; text-align: center; grid-column: 1/-1;">暫無文章</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ===== 合作邀請區域 ===== -->
+<section class="cta-banner" id="contact">
+    <!-- 大標題 -->
+    <h2>有趣的研究項目？</h2>
+    
+    <!-- 副標題，說明合作意願 -->
+    <p>讓我們一起探討資安議題<br>期待與你合作～～。</p>
+    
+    <!-- 聯繫按鈕 -->
+    <div class="cta-buttons">
+        <!-- Email 按鈕 -->
+        <a href="mailto:elainelu0813@gmail.com" class="cta-btn cta-btn-email">📧 Email</a>
+        <!-- GitHub 按鈕 -->
+        <a href="https://github.com/smadonkuan" target="_blank" class="cta-btn cta-btn-github">🐙 GitHub</a>
+    </div>
+</section>
+
+{% endblock %}

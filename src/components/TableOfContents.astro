@@ -2,8 +2,8 @@
 // TableOfContents.astro
 const { headings } = Astro.props;
 
-// Filter only H2
-const toc = headings.filter((heading: any) => heading.depth === 2);
+// Filter H2 and H3
+const toc = headings.filter((heading: any) => heading.depth === 2 || heading.depth === 3);
 ---
 
 <nav class="toc">
@@ -75,6 +75,11 @@ const toc = headings.filter((heading: any) => heading.depth === 2);
 
   .toc-item {
     margin-bottom: 0.8rem; /* More spacing for cleaner look */
+  }
+  
+  .toc-item.depth-3 {
+    padding-left: 1rem;
+    font-size: 0.95em;
   }
 
   a {

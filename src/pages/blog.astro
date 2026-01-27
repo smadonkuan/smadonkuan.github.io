@@ -1,0 +1,34 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+// 排序邏輯：新的在前 (假設日期格式 YYYY年 MM月 DD日 可簡單字串排序，或是保持原順序)
+// 這裡暫時保持原順序
+---
+
+<MainLayout title="Blog - 呂依璇 Elaine Lu" currentPath="/blog">
+    <div class="post">
+        <h1 class="section-title">📝 所有文章</h1>
+        
+        <div id="posts-container">
+            {posts.length === 0 ? (
+                <p style="text-align: center; color: #999;">目前沒有文章</p>
+            ) : (
+                posts.map(post => (
+                    <div class="blog-card">
+                        <h3><a href={`/posts/${post.slug}`} style="color: inherit; text-decoration: none;">{post.data.title}</a></h3>
+                        <div class="project-meta">
+                            <span>{post.data.date}</span> • <span>{post.data.readTime}</span>
+                        </div>
+                        <p>{post.data.excerpt}</p>
+                        <div class="tech-stack">
+                            {post.data.tags.map((tag: unknown) => <span class="tech-badge">{tag}</span>)}
+                        </div>
+                        <a href={`/posts/${post.slug}`} class="btn">Read Article →</a>
+                    </div>
+                ))
+            )}
+        </div>
+    </div>
+</MainLayout>

@@ -1,0 +1,217 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { getGithubRepos } from '../utils/github';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const posts = await getCollection('posts');
+// 這裡可以加入日期排序邏輯，目前先取前 5 篇
+const recentPosts = posts.slice(0, 5);
+
+// Fetch Projects
+const { repos, error } = await getGithubRepos();
+// Sort by updated_at desc just in case (though api does it)
+const featuredProjects = repos.slice(0, 3);
+---
+
+<MainLayout title="呂依璇 Elaine Lu - Information Security Researcher" currentPath="/">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>👋 歡迎</h1>
+        <p>我是一位資訊安全研究員，希望能認識對資安或科技有興趣的朋友，一起交流、學習。</p>
+    </div>
+
+    <!-- 精選專案和最新文章 -->
+    <div class="featured-section">
+        <div class="featured-column">
+            <h2>✨ 精選專案</h2>
+            <div id="featured-projects">
+                {error && (
+                     <p style="text-align: center; color: #E8714C; font-size: 14px; margin-bottom: 10px;">
+                        ⚠️ {error} (目前無法取得專案資料)
+                     </p>
+                )}
+                {featuredProjects.length === 0 ? (
+                    <p style="text-align: center; color: #999;">目前沒有專案</p>
+                ) : (
+                    <div class="projects-grid">
+                        {featuredProjects.map(repo => (
+                            <ProjectCard repo={repo} />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="featured-column">
+            <h2>📝 最新文章</h2>
+            <div id="featured-posts">
+                {recentPosts.length === 0 ? (
+                    <p style="text-align: center; color: #999;">目前沒有文章</p>
+                ) : (
+                    recentPosts.map(post => (
+                        <div class="blog-card">
+                            <h3><a href={`/posts/${post.slug}`} style="color: inherit; text-decoration: none;">{post.data.title}</a></h3>
+                            <p class="project-meta">{post.data.date}</p>
+                            <p>{post.data.excerpt}</p>
+                            <div class="tech-stack">
+                                {post.data.tags.map(tag => <span class="tech-badge">{tag}</span>)}
+                            </div>
+                            <a href={`/posts/${post.slug}`} class="btn">Read More →</a>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <h2>有趣的研究項目？</h2>
+        <p>歡迎對資安有興趣的朋友，一起交流、分享心得！</p>
+        <div class="cta-buttons">
+            <a href="/contact" class="cta-button cta-button-primary">聯絡我</a>
+        </div>
+    </section>
+</MainLayout>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #1A3A52 0%, #2D5A7F 100%);
+        color: white;
+        padding: 80px 60px;
+        border-radius: 12px;
+        margin-bottom: 60px;
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .hero-section p {
+        font-size: 18px;
+        line-height: 1.8;
+        margin-bottom: 0;
+        opacity: 0.95;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .featured-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    .featured-column h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1A3A52;
+        margin-bottom: 30px;
+    }
+
+    .featured-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .projects-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #featured-posts {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cta-banner {
+        background: linear-gradient(135deg, #1A3A52 0%, #2D5A7F 100%);
+        color: white;
+        padding: 60px 50px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .cta-banner h2 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .cta-banner p {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-button {
+        padding: 14px 32px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cta-button-primary {
+        background: #E8714C;
+        color: white;
+    }
+
+    .cta-button-primary:hover {
+        background: #D45A38;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(232, 113, 76, 0.3);
+    }
+
+    .cta-button-secondary {
+        background: white;
+        color: #1A3A52;
+    }
+
+    .cta-button-secondary:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .featured-section {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-section {
+            padding: 50px 30px;
+        }
+
+        .hero-section h1 {
+            font-size: 32px;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+        }
+
+        .cta-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

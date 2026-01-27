@@ -1,0 +1,96 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { getGithubRepos } from '../utils/github';
+
+interface Props {
+	title?: string;
+	currentPath?: string;
+}
+
+const { title = "呂依璇 Elaine Lu - Information Security Researcher", currentPath = "/" } = Astro.props;
+
+// Fetch Stats
+const posts = await getCollection('posts');
+const articleCount = posts.length;
+
+// Note: In development this might hit API limits on reload, but for static build it's fine.
+const { repos } = await getGithubRepos();
+const projectCount = repos.length;
+
+const navItems = [
+	{ name: 'Home', path: '/' },
+	{ name: 'Projects', path: '/projects' },
+	{ name: 'Blog', path: '/blog' },
+	{ name: 'Contact', path: '/contact' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{title}</title>
+</head>
+<body>
+	<div class="wrapper">
+		<!-- 左側邊欄 -->
+		<aside>
+			<div class="profile">
+				<a href="/" style="text-decoration: none; color: inherit;">
+					<img src="/elaine.png" alt="Profile" class="avatar" />
+					<h1>呂依璇 Elaine Lu</h1>
+				</a>
+				<p class="title">Information Security Researcher</p>
+				<p class="bio">Always learning, always growing.</p>
+			</div>
+
+			<div class="stats">
+				<div class="stat-item">
+					<div class="number" id="project-count">{projectCount}</div>
+					<div class="label">Projects</div>
+				</div>
+				<div class="stat-item">
+					<div class="number" id="article-count">{articleCount}</div>
+					<div class="label">Articles</div>
+				</div>
+			</div>
+
+			<div class="skills">
+				<h3>Tech Stack</h3>
+				<div class="skill-tags">
+					<span class="skill-tag">Python</span>
+					<span class="skill-tag">Security</span>
+					<span class="skill-tag">Linux</span>
+				</div>
+			</div>
+
+			<div class="social">
+				<a href="https://github.com/smadonkuan" target="_blank" title="GitHub">
+					<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" width="20" height="20">
+				</a>
+				<a href="mailto:elainelu0813@gmail.com" title="Email">
+					<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg" alt="Email" width="20" height="20">
+				</a>
+				<a href="https://www.linkedin.com/in/elaine-lu-115952392/" target="_blank" title="LinkedIn">
+					<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" width="20" height="20">
+				</a>
+			</div>
+		</aside>
+
+		<!-- 主內容 -->
+		<main>
+			<div class="nav-tabs">
+				{navItems.map(item => (
+					<a href={item.path} class={`nav-tab ${currentPath === item.path ? 'active' : ''}`}>
+						{item.name}
+					</a>
+				))}
+			</div>
+
+			<slot />
+		</main>
+	</div>
+</body>
+</html>

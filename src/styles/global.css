@@ -1,0 +1,637 @@
+/* ===== 全域重置 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== 主體樣式 ===== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: #ffffff;
+    color: #000000;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ===== 主容器布局 ===== */
+.wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    max-width: 100%;
+    /* Changed from 1400px to 100% for full width */
+    margin: 0 auto;
+}
+
+/* ===== 左側邊欄 ===== */
+aside {
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    padding: 60px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* ===== 個人資訊區塊 ===== */
+.profile {
+    text-align: center;
+}
+
+/* ===== 頭像圓形 ===== */
+/* ===== 頭像圓形 ===== */
+.avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    display: block;
+    /* Changed from flex to block for img */
+    object-fit: cover;
+    /* Ensure image covers the circle */
+    box-shadow: 0 0 20px rgba(26, 58, 82, 0.2);
+    border: 4px solid white;
+    /* Optional: adds a nice border */
+}
+
+/* ===== 名字標題 ===== */
+.profile h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+/* ===== 職位標籤 ===== */
+.profile .title {
+    color: #E8714C;
+    font-size: 13px;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* ===== 自我介紹文字 ===== */
+.bio {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 30px;
+}
+
+/* ===== 統計數據區 ===== */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+/* ===== 單個統計項目 ===== */
+.stat-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+/* ===== 統計數字 ===== */
+.stat-item .number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #E8714C;
+    margin-bottom: 5px;
+}
+
+/* ===== 統計標籤 ===== */
+.stat-item .label {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== 技能區塊 ===== */
+.skills {
+    margin-bottom: 40px;
+}
+
+/* ===== 技能標題 ===== */
+.skills h3 {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+/* ===== 技能標籤容器 ===== */
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ===== 單個技能標籤 ===== */
+.skill-tag {
+    background: #fff;
+    border: 1px solid #E8714C;
+    color: #E8714C;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    transition: all 0.3s;
+}
+
+/* 懸停效果 */
+.skill-tag:hover {
+    background: #E8714C;
+    color: white;
+}
+
+/* ===== 社交媒體連結區 ===== */
+.social {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ===== 社交媒體圖標 ===== */
+.social a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E8714C;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+/* 懸停效果 */
+.social a:hover {
+    background: #E8714C;
+    color: white;
+    border-color: #E8714C;
+}
+
+/* ===== 主內容區域 ===== */
+main {
+    padding: 40px 40px;
+    /* Reduced from 60px 80px to maximize space */
+    /* overflow-y: auto; Removed to allow sticky positioning inside to work with body scroll */
+    background: #ffffff;
+}
+
+/* ===== 導航標籤 ===== */
+.nav-tabs {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 80px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 20px;
+}
+
+/* ===== 單個導航標籤 ===== */
+.nav-tab {
+    color: #999;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+/* 懸停和激活狀態 */
+.nav-tab:hover,
+.nav-tab.active {
+    color: #E8714C;
+}
+
+/* 激活標籤下方底線 */
+.nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #E8714C;
+}
+
+/* ===== 頁面大標題 ===== */
+.section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    color: #000;
+}
+
+/* ===== 內容卡片 ===== */
+.project-card,
+.blog-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s;
+}
+
+/* 卡片懸停效果 */
+.project-card:hover,
+.blog-card:hover {
+    border-color: #E8714C;
+    box-shadow: 0 4px 15px rgba(232, 113, 76, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ===== 卡片標題 ===== */
+.project-card h3,
+.blog-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+/* ===== 卡片日期 ===== */
+.project-meta {
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+/* ===== 卡片描述文字 ===== */
+.project-card p,
+.blog-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+/* ===== 技術棧標籤 ===== */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+/* ===== 單個技術標籤 ===== */
+.tech-badge {
+    background: #f5f5f5;
+    border: 1px solid #d0e0ff;
+    color: #3f3e3e;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* ===== 卡片底部按鈕群 ===== */
+.card-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* ===== 按鈕樣式 ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #E8714C;
+    color: #E8714C;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+/* 按鈕懸停效果 */
+.btn:hover {
+    background: #E8714C;
+    color: white;
+}
+
+/* ===== Featured 標籤 ===== */
+.featured-label {
+    display: inline-block;
+    background: #E8714C;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== 左右分割容器 ===== */
+.content-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 60px 0;
+}
+
+/* ===== CTA Banner ===== */
+.cta-banner {
+    background: linear-gradient(135deg, #E8714C 0%, #D45A38 100%);
+    color: white;
+    padding: 80px 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 100px 0;
+}
+
+.cta-banner h2 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.cta-banner p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    line-height: 1.8;
+    color: white;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-btn-email {
+    background: white;
+    color: #E8714C;
+}
+
+.cta-btn-email:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta-btn-github {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.cta-btn-github:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+/* ===== 文章詳情頁樣式 ===== */
+.post {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.post-header {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+}
+
+.post-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.post-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+.tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.tag {
+    background: #f0f4ff;
+    color: #E8714C;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.post-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* Markdown 程式碼區塊美化（Maple Mono） */
+.post-body code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Maple Mono', monospace;
+    color: #E8714C;
+    font-size: 14px;
+}
+
+.post-body pre {
+    background: #f5f5f5;
+    border-left: 4px solid #E8714C;
+    padding: 15px 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Maple Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    margin: 20px 0;
+}
+
+.post-body pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+.post-body h2 {
+    font-size: 1.8rem;
+    margin: 30px 0 15px 0;
+    color: #1A3A52;
+    border-left: 4px solid #E8714C;
+    padding-left: 15px;
+}
+
+/* Notion-style clickable headings */
+.post-body h2 a,
+.post-body h3 a,
+.post-body h4 a,
+.post-body h5 a,
+.post-body h6 a {
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.post-body h2 a:hover,
+.post-body h3 a:hover,
+.post-body h4 a:hover,
+.post-body h5 a:hover,
+.post-body h6 a:hover {
+    text-decoration: underline;
+    text-decoration-color: #E8714C;
+    text-decoration-thickness: 2px;
+}
+
+.post-body h3 {
+    font-size: 1.3rem;
+    margin: 20px 0 10px 0;
+    color: #333;
+}
+
+.post-body p {
+    margin-bottom: 15px;
+}
+
+.post-body ul,
+.post-body ol {
+    margin: 15px 0 15px 30px;
+}
+
+.post-body li {
+    margin-bottom: 8px;
+}
+
+.post-body blockquote {
+    border-left: 4px solid #E8714C;
+    padding-left: 15px;
+    margin-left: 0;
+    color: #666;
+    font-style: italic;
+}
+
+.post-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.post-body th,
+.post-body td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.post-body th {
+    background: #f5f5f5;
+    font-weight: bold;
+}
+
+.post-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.back-link {
+    color: #E8714C;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.back-link:hover {
+    transform: translateX(-5px);
+}
+
+/* ===== 手機適配 ===== */
+@media (max-width: 768px) {
+    .wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    aside {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 40px 20px;
+    }
+
+    main {
+        padding: 40px 20px;
+    }
+
+    .nav-tabs {
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .content-two-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-banner {
+        padding: 60px 20px;
+        margin: 60px 0;
+    }
+
+    .cta-banner h2 {
+        font-size: 28px;
+    }
+
+    .cta-banner p {
+        font-size: 16px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Race Condition - 呂依璇 Elaine Lu</title><link rel="stylesheet" href="/_astro/blog.C3It1c6O.css">
+<style>.toc[data-astro-cid-xvrfupwn]{position:sticky;top:100px;padding:0;max-height:calc(100vh - 120px);overflow-y:auto;font-size:.85em;line-height:1.6}ul[data-astro-cid-xvrfupwn]{list-style:none;padding:0;margin:0}.toc-item[data-astro-cid-xvrfupwn]{margin-bottom:.8rem}a[data-astro-cid-xvrfupwn]{text-decoration:none;color:#999;display:block;transition:color .2s ease;border:none;padding:0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}a[data-astro-cid-xvrfupwn]:hover{color:#e8714c}a[data-astro-cid-xvrfupwn].active{color:#e8714c;font-weight:700}@media(max-width:1024px){.toc[data-astro-cid-xvrfupwn]{display:none}}.post-container[data-astro-cid-gysqo7gh]{display:grid;grid-template-columns:1fr 240px;gap:40px;max-width:100%;margin:0 auto;align-items:start;position:relative}.post[data-astro-cid-gysqo7gh]{max-width:100%;min-width:0}@media(max-width:1024px){.post-container[data-astro-cid-gysqo7gh]{grid-template-columns:1fr}.toc-sidebar[data-astro-cid-gysqo7gh]{display:none}}
+</style></head> <body> <div class="wrapper"> <!-- 左側邊欄 --> <aside> <div class="profile"> <a href="/" style="text-decoration: none; color: inherit;"> <img src="/elaine.png" alt="Profile" class="avatar"> <h1>呂依璇 Elaine Lu</h1> </a> <p class="title">Information Security Researcher</p> <p class="bio">Always learning, always growing.</p> </div> <div class="stats"> <div class="stat-item"> <div class="number" id="project-count">6</div> <div class="label">Projects</div> </div> <div class="stat-item"> <div class="number" id="article-count">2</div> <div class="label">Articles</div> </div> </div> <div class="skills"> <h3>Tech Stack</h3> <div class="skill-tags"> <span class="skill-tag">Python</span> <span class="skill-tag">Security</span> <span class="skill-tag">Linux</span> </div> </div> <div class="social"> <a href="https://github.com/smadonkuan" target="_blank" title="GitHub"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" width="20" height="20"> </a> <a href="mailto:elainelu0813@gmail.com" title="Email"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg" alt="Email" width="20" height="20"> </a> <a href="https://www.linkedin.com/in/elaine-lu-115952392/" target="_blank" title="LinkedIn"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" width="20" height="20"> </a> </div> </aside> <!-- 主內容 --> <main> <div class="nav-tabs"> <a href="/" class="nav-tab "> Home </a><a href="/projects" class="nav-tab "> Projects </a><a href="/blog" class="nav-tab active"> Blog </a><a href="/contact" class="nav-tab "> Contact </a> </div>  <div class="post-container" data-astro-cid-gysqo7gh> <article class="post" data-astro-cid-gysqo7gh> <div class="post-header" data-astro-cid-gysqo7gh> <h1 data-astro-cid-gysqo7gh>Race Condition</h1> <div class="post-meta" data-astro-cid-gysqo7gh> <span class="date" data-astro-cid-gysqo7gh>2025年 09月 12日</span> <span class="separator" data-astro-cid-gysqo7gh> • </span> <span class="read-time" data-astro-cid-gysqo7gh>12 min read</span> </div> <div class="tags" data-astro-cid-gysqo7gh> <span class="tag" data-astro-cid-gysqo7gh>Threading</span><span class="tag" data-astro-cid-gysqo7gh>Python</span><span class="tag" data-astro-cid-gysqo7gh>並發編程</span> </div> </div> <div class="post-body" data-astro-cid-gysqo7gh> <h2 id="什麼是-race-condition"><a href="#什麼是-race-condition">什麼是 Race Condition？</a></h2>
+<p>Race Condition 是指多個執行緒同時訪問共享資源，但沒有適當的同步機制，導致結果不可預測的現象。</p>
+<p>簡單比喻：想像兩個人同時從銀行帳戶提款。如果沒有鎖機制，可能都能提出超過帳戶餘額的金額。</p>
+<h3 id="最簡單的例子"><a href="#最簡單的例子">最簡單的例子</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># 不安全的程式碼</span></span>
+<span class="line"><span style="color:#E1E4E8">counter </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> increment</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    global</span><span style="color:#E1E4E8"> counter</span></span>
+<span class="line"><span style="color:#E1E4E8">    counter </span><span style="color:#F97583">+=</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 用 100 個執行緒各加 1000 次</span></span>
+<span class="line"><span style="color:#6A737D"># 預期結果：100,000</span></span>
+<span class="line"><span style="color:#6A737D"># 實際結果：通常是 20,000 ~ 80,000（不確定）</span></span></code></pre>
+<h3 id="為什麼"><a href="#為什麼">為什麼？</a></h3>
+<p>因為 <code>counter += 1</code> 實際上不是原子操作（atomic operation）。它被編譯成三個步驟：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LOAD counter into register    # 讀取值</span></span>
+<span class="line"><span>ADD 1 to register            # 加 1</span></span>
+<span class="line"><span>STORE register back to counter # 存回</span></span></code></pre>
+<p>如果兩個執行緒同時執行，可能會互相覆蓋彼此的結果。</p>
+<hr>
+<h2 id="race-condition-的三個必要條件"><a href="#race-condition-的三個必要條件">Race Condition 的三個必要條件</a></h2>
+<p>要發生 Race Condition，必須同時滿足以下三個條件：</p>
+<h3 id="1-多個執行緒進程訪問共享資源"><a href="#1-多個執行緒進程訪問共享資源">1. 多個執行緒/進程訪問共享資源</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#E1E4E8">shared_resource </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"balance"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#6A737D"># 多個執行緒都想修改這個字典</span></span></code></pre>
+<h3 id="2-至少有一個執行緒進行寫入操作"><a href="#2-至少有一個執行緒進行寫入操作">2. 至少有一個執行緒進行寫入操作</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># 只有讀取是安全的</span></span>
+<span class="line"><span style="color:#6A737D"># 但只要有寫入，就可能出問題</span></span>
+<span class="line"><span style="color:#E1E4E8">balance </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> shared_resource[</span><span style="color:#9ECBFF">"balance"</span><span style="color:#E1E4E8">]  </span><span style="color:#6A737D"># 讀（安全）</span></span>
+<span class="line"><span style="color:#E1E4E8">shared_resource[</span><span style="color:#9ECBFF">"balance"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">-=</span><span style="color:#79B8FF"> 100</span><span style="color:#6A737D">     # 寫（危險）</span></span></code></pre>
+<h3 id="3-沒有同步機制控制訪問順序"><a href="#3-沒有同步機制控制訪問順序">3. 沒有同步機制控制訪問順序</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># 沒有鎖、沒有信號量、沒有原子操作</span></span>
+<span class="line"><span style="color:#6A737D"># = Race Condition 的溫床</span></span></code></pre>
+<hr>
+<h2 id="實戰案例-1銀行轉帳系統"><a href="#實戰案例-1銀行轉帳系統">實戰案例 1：銀行轉帳系統</a></h2>
+<h3 id="問題程式碼"><a href="#問題程式碼">問題程式碼</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> threading</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> BankAccount</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, balance):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> balance</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> transfer</span><span style="color:#E1E4E8">(self, amount):</span></span>
+<span class="line"><span style="color:#9ECBFF">        """不安全的轉帳"""</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">>=</span><span style="color:#E1E4E8"> amount:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">-=</span><span style="color:#E1E4E8"> amount</span></span>
+<span class="line"><span style="color:#79B8FF">            print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"轉帳 </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">amount</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">，剩餘 </span><span style="color:#79B8FF">{self</span><span style="color:#E1E4E8">.balance</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">account </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> BankAccount(</span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> withdraw_many_times</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        account.transfer(</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">threads </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [threading.Thread(</span><span style="color:#FFAB70">target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">withdraw_many_times) </span><span style="color:#F97583">for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)]</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.start()</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.join()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"最終餘額：</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">account.balance</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="為什麼會出問題"><a href="#為什麼會出問題">為什麼會出問題？</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>時間</th><th>執行緒 A</th><th>執行緒 B</th><th>account.balance</th></tr></thead><tbody><tr><td>1</td><td>讀: 1000</td><td></td><td>1000</td></tr><tr><td>2</td><td></td><td>讀: 1000</td><td>1000</td></tr><tr><td>3</td><td>寫: 990</td><td></td><td>990</td></tr><tr><td>4</td><td></td><td>寫: 990</td><td>990 (應該是 980!)</td></tr></tbody></table>
+<p>執行緒 B 覆蓋了執行緒 A 的操作。</p>
+<h3 id="解決方案mutex-lock互斥鎖"><a href="#解決方案mutex-lock互斥鎖">解決方案：Mutex Lock（互斥鎖）</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> threading</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> BankAccount</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, balance):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> balance</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.lock </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> threading.Lock()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> transfer</span><span style="color:#E1E4E8">(self, amount):</span></span>
+<span class="line"><span style="color:#9ECBFF">        """安全的轉帳"""</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.lock:</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">>=</span><span style="color:#E1E4E8"> amount:</span></span>
+<span class="line"><span style="color:#79B8FF">                self</span><span style="color:#E1E4E8">.balance </span><span style="color:#F97583">-=</span><span style="color:#E1E4E8"> amount</span></span>
+<span class="line"><span style="color:#79B8FF">                print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"轉帳 </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">amount</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">，剩餘 </span><span style="color:#79B8FF">{self</span><span style="color:#E1E4E8">.balance</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">account </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> BankAccount(</span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> withdraw_many_times</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        account.transfer(</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">threads </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [threading.Thread(</span><span style="color:#FFAB70">target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">withdraw_many_times) </span><span style="color:#F97583">for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)]</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.start()</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.join()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"最終餘額：</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">account.balance</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)  </span><span style="color:#6A737D"># 現在一定是 0</span></span></code></pre>
+<p><strong>原理：</strong> 鎖確保同一時間只有一個執行緒能進入臨界區。</p>
+<hr>
+<h2 id="實戰案例-2生產者-消費者問題"><a href="#實戰案例-2生產者-消費者問題">實戰案例 2：生產者-消費者問題</a></h2>
+<h3 id="問題程式碼-1"><a href="#問題程式碼-1">問題程式碼</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> threading</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> time</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Buffer</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.items </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> []</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> produce</span><span style="color:#E1E4E8">(self, item):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.items.append(item)</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"生產: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">item</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> consume</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.items:</span></span>
+<span class="line"><span style="color:#E1E4E8">            item </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.items.pop(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">            print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"消費: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">item</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">buffer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Buffer()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> producer</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        buffer.produce(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"item-</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">i</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        time.sleep(</span><span style="color:#79B8FF">0.01</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> consumer</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        buffer.consume()</span></span></code></pre>
+<h3 id="解決方案condition-variable"><a href="#解決方案condition-variable">解決方案：Condition Variable</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> threading</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> time</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Buffer</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.items </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> []</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.lock </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> threading.Lock()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.condition </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> threading.Condition(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.lock)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> produce</span><span style="color:#E1E4E8">(self, item):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.condition:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.items.append(item)</span></span>
+<span class="line"><span style="color:#79B8FF">            print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"生產: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">item</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.condition.notify()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> consume</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.condition:</span></span>
+<span class="line"><span style="color:#F97583">            while</span><span style="color:#F97583"> not</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.items:</span></span>
+<span class="line"><span style="color:#79B8FF">                self</span><span style="color:#E1E4E8">.condition.wait()</span></span>
+<span class="line"><span style="color:#E1E4E8">            item </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.items.pop(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">            print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"消費: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">item</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">buffer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Buffer()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> producer</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        buffer.produce(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"item-</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">i</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        time.sleep(</span><span style="color:#79B8FF">0.01</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> consumer</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        buffer.consume()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">threads </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    threading.Thread(</span><span style="color:#FFAB70">target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">producer),</span></span>
+<span class="line"><span style="color:#E1E4E8">    threading.Thread(</span><span style="color:#FFAB70">target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">consumer),</span></span>
+<span class="line"><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.start()</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> t </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> threads:</span></span>
+<span class="line"><span style="color:#E1E4E8">    t.join()</span></span></code></pre>
+<hr>
+<h2 id="race-condition-的常見類型"><a href="#race-condition-的常見類型">Race Condition 的常見類型</a></h2>
+<h3 id="1-資料競爭data-race"><a href="#1-資料競爭data-race">1. 資料競爭（Data Race）</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#E1E4E8">x </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#6A737D"># 執行緒 A: x = x + 1</span></span>
+<span class="line"><span style="color:#6A737D"># 執行緒 B: x = x + 1</span></span>
+<span class="line"><span style="color:#6A737D"># 結果：x = 1（而不是 2）</span></span></code></pre>
+<h3 id="2-檢查-執行問題check-then-act"><a href="#2-檢查-執行問題check-then-act">2. 檢查-執行問題（Check-Then-Act）</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> file_exists(filename):</span></span>
+<span class="line"><span style="color:#6A737D">    # 執行緒 B 在這裡可能刪除了檔案</span></span>
+<span class="line"><span style="color:#E1E4E8">    data </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> open</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"data.txt"</span><span style="color:#E1E4E8">)  </span><span style="color:#6A737D"># 錯誤！</span></span></code></pre>
+<h3 id="3-讀-修改-寫"><a href="#3-讀-修改-寫">3. 讀-修改-寫</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># 執行緒 A: temp = counter; temp++; counter = temp</span></span>
+<span class="line"><span style="color:#6A737D"># 執行緒 B: temp = counter; temp++; counter = temp</span></span>
+<span class="line"><span style="color:#6A737D"># 結果：counter 只 +1（而不是 +2）</span></span></code></pre>
+<hr>
+<h2 id="解決方案總結"><a href="#解決方案總結">解決方案總結</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>方案</th><th>優點</th><th>缺點</th><th>使用場景</th></tr></thead><tbody><tr><td>Mutex Lock</td><td>簡單，適用大多數情況</td><td>可能死鎖</td><td>一般共享資源</td></tr><tr><td>Condition Variable</td><td>能有效等待事件</td><td>複雜度高</td><td>生產者-消費者</td></tr><tr><td>Semaphore</td><td>能控制資源數量</td><td>容易出錯</td><td>有限資源池</td></tr><tr><td>RWLock</td><td>允許多個讀者</td><td>實現複雜</td><td>讀多寫少</td></tr><tr><td>Atomic Operations</td><td>無鎖，高效</td><td>只支援簡單操作</td><td>計數器、標誌</td></tr><tr><td>Message Passing</td><td>避免共享狀態</td><td>效能開銷</td><td>複雜互動</td></tr></tbody></table>
+<h3 id="python-範例使用-lock"><a href="#python-範例使用-lock">Python 範例：使用 Lock</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> threading</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> threading </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Lock</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Counter</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">._value </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">._lock </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Lock()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> increment</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._lock:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._value </span><span style="color:#F97583">+=</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> get_value</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._lock:</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._value</span></span></code></pre>
+<hr>
+<h2 id="偵測-race-condition-的方法"><a href="#偵測-race-condition-的方法">偵測 Race Condition 的方法</a></h2>
+<h3 id="1-壓力測試"><a href="#1-壓力測試">1. 壓力測試</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> _ </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">    thread </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> threading.Thread(</span><span style="color:#FFAB70">target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">risky_function)</span></span>
+<span class="line"><span style="color:#E1E4E8">    thread.start()</span></span>
+<span class="line"><span style="color:#E1E4E8">    thread.join()</span></span></code></pre>
+<h3 id="2-threadsanitizertsan"><a href="#2-threadsanitizertsan">2. ThreadSanitizer（TSan）</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">gcc</span><span style="color:#79B8FF"> -fsanitize=thread</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> program.c</span></span></code></pre>
+<h3 id="3-工具和框架"><a href="#3-工具和框架">3. 工具和框架</a></h3>
+<ul>
+<li><strong>Java</strong>: JCStress, ThreadSafety Checker</li>
+<li><strong>Python</strong>: ThreadSanitizer, pytest-xdist</li>
+<li><strong>Go</strong>: race detector</li>
+</ul>
+<hr>
+<h2 id="race-condition-的最佳實踐"><a href="#race-condition-的最佳實踐">Race Condition 的最佳實踐</a></h2>
+<h3 id="-要做的事"><a href="#-要做的事">✅ 要做的事</a></h3>
+<h4 id="1-最小化臨界區"><a href="#1-最小化臨界區">1. 最小化臨界區</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># 好</span></span>
+<span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock:</span></span>
+<span class="line"><span style="color:#E1E4E8">    result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> expensive_computation()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 不好</span></span>
+<span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock:</span></span>
+<span class="line"><span style="color:#E1E4E8">    result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> expensive_computation()</span></span>
+<span class="line"><span style="color:#E1E4E8">    other_work()</span></span></code></pre>
+<h4 id="2-使用高層次抽象"><a href="#2-使用高層次抽象">2. 使用高層次抽象</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> queue </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Queue</span></span>
+<span class="line"><span style="color:#E1E4E8">q </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Queue()  </span><span style="color:#6A737D"># 內部已經線程安全</span></span></code></pre>
+<h4 id="3-加入日誌和監控"><a href="#3-加入日誌和監控">3. 加入日誌和監控</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> logging</span></span>
+<span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock:</span></span>
+<span class="line"><span style="color:#E1E4E8">    logging.debug(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Thread </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">threading.current_thread().name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> 進入臨界區"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h4 id="4-使用不可變物件"><a href="#4-使用不可變物件">4. 使用不可變物件</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#E1E4E8">data </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">)  </span><span style="color:#6A737D"># tuple 是不可變的</span></span></code></pre>
+<h3 id="-不要做的事"><a href="#-不要做的事">❌ 不要做的事</a></h3>
+<h4 id="1-過度鎖定"><a href="#1-過度鎖定">1. 過度鎖定</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock:</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1000000</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        do_expensive_operation()  </span><span style="color:#6A737D"># 太慢了</span></span></code></pre>
+<h4 id="2-嵌套鎖容易死鎖"><a href="#2-嵌套鎖容易死鎖">2. 嵌套鎖（容易死鎖）</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock1:</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> lock2:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span><span style="color:#6A737D">  # 危險！</span></span></code></pre>
+<h4 id="3-忘記同步"><a href="#3-忘記同步">3. 忘記同步</a></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">with</span><span style="color:#E1E4E8"> lock:</span></span>
+<span class="line"><span style="color:#E1E4E8">    part1 </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> data</span></span>
+<span class="line"><span style="color:#E1E4E8">part2 </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> data  </span><span style="color:#6A737D"># 沒有鎖！</span></span></code></pre>
+<hr>
+<h2 id="總結"><a href="#總結">總結</a></h2>
+<p>Race Condition 是多執行緒程式設計中最常見也最隱蔽的 bug。</p>
+<p><strong>核心重點：</strong></p>
+<ol>
+<li><strong>識別共享資源</strong> - 找出哪些資料被多個執行緒訪問</li>
+<li><strong>新增同步機制</strong> - Lock、Condition Variable、Atomic 等</li>
+<li><strong>測試徹底</strong> - 壓力測試揭示 Race Condition</li>
+<li><strong>設計簡潔</strong> - 儘量減少同步的複雜性</li>
+</ol>
+<p>理解 Race Condition 不只是寫出更好的程式碼，也是理解作業系統底層如何調度執行緒的第一步。</p> </div> <div class="post-footer" data-astro-cid-gysqo7gh> <a href="/blog" class="back-link" data-astro-cid-gysqo7gh>← 返回文章列表</a> </div> </article> <aside class="toc-sidebar" data-astro-cid-gysqo7gh> <nav class="toc" data-astro-cid-xvrfupwn> <!-- Title removed as requested --> <ul data-astro-cid-xvrfupwn> <li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#什麼是-race-condition" title="什麼是 Race Condition？" data-astro-cid-xvrfupwn>什麼是 Race Condition？</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#race-condition-的三個必要條件" title="Race Condition 的三個必要條件" data-astro-cid-xvrfupwn>Race Condition 的三個必要條件</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#實戰案例-1銀行轉帳系統" title="實戰案例 1：銀行轉帳系統" data-astro-cid-xvrfupwn>實戰案例 1：銀行轉帳系統</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#實戰案例-2生產者-消費者問題" title="實戰案例 2：生產者-消費者問題" data-astro-cid-xvrfupwn>實戰案例 2：生產者-消費者問題</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#race-condition-的常見類型" title="Race Condition 的常見類型" data-astro-cid-xvrfupwn>Race Condition 的常見類型</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#解決方案總結" title="解決方案總結" data-astro-cid-xvrfupwn>解決方案總結</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#偵測-race-condition-的方法" title="偵測 Race Condition 的方法" data-astro-cid-xvrfupwn>偵測 Race Condition 的方法</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#race-condition-的最佳實踐" title="Race Condition 的最佳實踐" data-astro-cid-xvrfupwn>Race Condition 的最佳實踐</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#總結" title="總結" data-astro-cid-xvrfupwn>總結</a> </li> </ul> </nav> <script type="module">const s=e=>{e.forEach(t=>{if(t.isIntersecting){const o=t.target.getAttribute("id");if(o){document.querySelectorAll(".toc a").forEach(c=>{c.classList.remove("active")});const r=document.querySelector(`.toc a[href="#${o}"]`);r&&r.classList.add("active")}}})},i=new IntersectionObserver(s,{rootMargin:"-10% 0px -80% 0px",threshold:0});document.querySelectorAll(".post-body h2, .post-body h3").forEach(e=>{i.observe(e)});</script>  </aside> </div>  </main> </div> </body></html> 

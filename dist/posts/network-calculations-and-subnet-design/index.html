@@ -1,0 +1,697 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>電腦網路計算：從資料單位到子網設計 - 呂依璇 Elaine Lu</title><link rel="stylesheet" href="/_astro/blog.C3It1c6O.css">
+<style>.toc[data-astro-cid-xvrfupwn]{position:sticky;top:100px;padding:0;max-height:calc(100vh - 120px);overflow-y:auto;font-size:.85em;line-height:1.6}ul[data-astro-cid-xvrfupwn]{list-style:none;padding:0;margin:0}.toc-item[data-astro-cid-xvrfupwn]{margin-bottom:.8rem}a[data-astro-cid-xvrfupwn]{text-decoration:none;color:#999;display:block;transition:color .2s ease;border:none;padding:0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}a[data-astro-cid-xvrfupwn]:hover{color:#e8714c}a[data-astro-cid-xvrfupwn].active{color:#e8714c;font-weight:700}@media(max-width:1024px){.toc[data-astro-cid-xvrfupwn]{display:none}}.post-container[data-astro-cid-gysqo7gh]{display:grid;grid-template-columns:1fr 240px;gap:40px;max-width:100%;margin:0 auto;align-items:start;position:relative}.post[data-astro-cid-gysqo7gh]{max-width:100%;min-width:0}@media(max-width:1024px){.post-container[data-astro-cid-gysqo7gh]{grid-template-columns:1fr}.toc-sidebar[data-astro-cid-gysqo7gh]{display:none}}
+</style></head> <body> <div class="wrapper"> <!-- 左側邊欄 --> <aside> <div class="profile"> <a href="/" style="text-decoration: none; color: inherit;"> <img src="/elaine.png" alt="Profile" class="avatar"> <h1>呂依璇 Elaine Lu</h1> </a> <p class="title">Information Security Researcher</p> <p class="bio">Always learning, always growing.</p> </div> <div class="stats"> <div class="stat-item"> <div class="number" id="project-count">6</div> <div class="label">Projects</div> </div> <div class="stat-item"> <div class="number" id="article-count">2</div> <div class="label">Articles</div> </div> </div> <div class="skills"> <h3>Tech Stack</h3> <div class="skill-tags"> <span class="skill-tag">Python</span> <span class="skill-tag">Security</span> <span class="skill-tag">Linux</span> </div> </div> <div class="social"> <a href="https://github.com/smadonkuan" target="_blank" title="GitHub"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" width="20" height="20"> </a> <a href="mailto:elainelu0813@gmail.com" title="Email"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg" alt="Email" width="20" height="20"> </a> <a href="https://www.linkedin.com/in/elaine-lu-115952392/" target="_blank" title="LinkedIn"> <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" width="20" height="20"> </a> </div> </aside> <!-- 主內容 --> <main> <div class="nav-tabs"> <a href="/" class="nav-tab "> Home </a><a href="/projects" class="nav-tab "> Projects </a><a href="/blog" class="nav-tab active"> Blog </a><a href="/contact" class="nav-tab "> Contact </a> </div>  <div class="post-container" data-astro-cid-gysqo7gh> <article class="post" data-astro-cid-gysqo7gh> <div class="post-header" data-astro-cid-gysqo7gh> <h1 data-astro-cid-gysqo7gh>電腦網路計算：從資料單位到子網設計</h1> <div class="post-meta" data-astro-cid-gysqo7gh> <span class="date" data-astro-cid-gysqo7gh>2025-12-31</span> <span class="separator" data-astro-cid-gysqo7gh> • </span> <span class="read-time" data-astro-cid-gysqo7gh>12 分鐘閱讀</span> </div> <div class="tags" data-astro-cid-gysqo7gh> <span class="tag" data-astro-cid-gysqo7gh>電腦網路</span><span class="tag" data-astro-cid-gysqo7gh>IP 位址</span><span class="tag" data-astro-cid-gysqo7gh>子網切割</span><span class="tag" data-astro-cid-gysqo7gh>網路工程</span> </div> </div> <div class="post-body" data-astro-cid-gysqo7gh> <p>在網路工程中，「計算」不只是數學運算，而是一種用來理解、設計與驗證網路結構的基本能力。</p>
+<p>本文從資料單位、傳輸速率，一路推進到 IP 與子網路的規劃，並延伸到 VLSM 與 IPv6，建立一套完整的網路計算觀念架構。</p>
+<hr>
+<h2 id="一資料單位與位元結構"><a href="#一資料單位與位元結構">一、資料單位與位元結構</a></h2>
+<h3 id="1-bit-與-byte-的本質差異"><a href="#1-bit-與-byte-的本質差異">1. Bit 與 Byte 的本質差異</a></h3>
+<p><strong>Bit（b）</strong>：最小資訊單位，只能表示 0 或 1</p>
+<p><strong>Byte（B）</strong>：由 8 個 bit 組成，是儲存與傳輸的基本單位</p>
+<p><strong>特別注意：</strong></p>
+<ul>
+<li>網路頻寬使用 <strong>bit</strong> 為單位（bps）</li>
+<li>儲存容量使用 <strong>Byte</strong> 為單位（B）</li>
+<li><strong>兩者相差 8 倍</strong></li>
+</ul>
+<h3 id="2-常見單位換算"><a href="#2-常見單位換算">2. 常見單位換算</a></h3>
+<p>注意：有兩種標準，需區分使用情境</p>
+<p><strong>二進位制（KiB, MiB, GiB）</strong>：1024 為基底（作業系統、記憶體）</p>
+<p><strong>十進位制（KB, MB, GB）</strong>：1000 為基底（網路傳輸、硬碟標示）</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>單位</th><th>二進位換算</th><th>十進位換算</th></tr></thead><tbody><tr><td>1 KB</td><td>1024 B</td><td>1000 B</td></tr><tr><td>1 MB</td><td>1024 KB</td><td>1000 KB</td></tr><tr><td>1 GB</td><td>1024 MB</td><td>1000 MB</td></tr><tr><td>1 TB</td><td>1024 GB</td><td>1000 GB</td></tr></tbody></table>
+<p><strong>實務建議：</strong></p>
+<ul>
+<li><strong>網路計算時通常使用十進位</strong>（因為 ISP 和網路設備都這樣標示）</li>
+<li>檔案系統顯示時使用二進位（這就是為什麼 1TB 硬碟在電腦上顯示不到 1TB）</li>
+</ul>
+<hr>
+<h2 id="二傳輸速率與時間的計算邏輯"><a href="#二傳輸速率與時間的計算邏輯">二、傳輸速率與時間的計算邏輯</a></h2>
+<h3 id="核心公式"><a href="#核心公式">核心公式</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>傳送時間 = 資料量 ÷ 傳輸速率</span></span></code></pre>
+<p><strong>重要提醒：</strong></p>
+<ul>
+<li>資料量需以 <strong>bit</strong> 表示</li>
+<li>傳輸速率需以 <strong>bps</strong> 表示</li>
+</ul>
+<h3 id="範例計算"><a href="#範例計算">範例計算</a></h3>
+<p><strong>情境：</strong></p>
+<ul>
+<li>檔案大小 = 80 MB</li>
+<li>頻寬 = 10 Mbps</li>
+</ul>
+<p><strong>方法一（網路常用，十進位）：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>80 MB = 80 × 8 = 640 Mb</span></span>
+<span class="line"><span>傳送時間 = 640 Mb ÷ 10 Mbps = 64 秒</span></span></code></pre>
+<p><strong>方法二（嚴格二進位）：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>80 MB = 80 × 1024 × 1024 × 8 bit = 671,088,640 bit</span></span>
+<span class="line"><span>      = 671.09 Mb</span></span>
+<span class="line"><span>傳送時間 = 671.09 Mb ÷ 10 Mbps ≈ 67.1 秒</span></span></code></pre>
+<p><strong>常見錯誤：</strong></p>
+<ul>
+<li>❌ 忽略 Byte 與 bit 的轉換（相差 8 倍）</li>
+<li>❌ 混用 MB 與 Mb</li>
+<li>❌ 直接用 80 ÷ 10 = 8 秒（忘記轉換單位）</li>
+</ul>
+<h3 id="快速換算技巧"><a href="#快速換算技巧">快速換算技巧</a></h3>
+<p><strong>頻寬轉檔案速度：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>100 Mbps ÷ 8 = 12.5 MB/s（理論值）</span></span>
+<span class="line"><span>1 Gbps ÷ 8 = 125 MB/s（理論值）</span></span></code></pre>
+<hr>
+<h2 id="三頻寬與實際效能的差異"><a href="#三頻寬與實際效能的差異">三、頻寬與實際效能的差異</a></h2>
+<h3 id="理論頻寬--實際速度"><a href="#理論頻寬--實際速度">理論頻寬 ≠ 實際速度</a></h3>
+<p>影響因素包括：</p>
+<ol>
+<li><strong>封包標頭與協定開銷</strong>（Overhead）</li>
+<li><strong>重傳與錯誤修正</strong></li>
+<li><strong>多使用者共享頻寬</strong></li>
+<li><strong>路由延遲與繞路</strong></li>
+</ol>
+<h3 id="協定開銷實例"><a href="#協定開銷實例">協定開銷實例</a></h3>
+<p>傳送 1500 byte 的資料（標準 MTU 大小）：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>項目</th><th>大小</th></tr></thead><tbody><tr><td>實際資料</td><td>1500 bytes</td></tr><tr><td>TCP 標頭</td><td>20 bytes</td></tr><tr><td>IP 標頭</td><td>20 bytes</td></tr><tr><td>Ethernet 標頭 + CRC</td><td>18 bytes</td></tr><tr><td>Interframe Gap</td><td>12 bytes</td></tr><tr><td><strong>總共需傳送</strong></td><td><strong>1570 bytes</strong></td></tr></tbody></table>
+<p><strong>實際效率 = 1500 ÷ 1570 ≈ 95.5%</strong></p>
+<h3 id="近似公式"><a href="#近似公式">近似公式</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>實際可用速度 ≈ 理論頻寬 × 85% ~ 95%</span></span></code></pre>
+<p><strong>不同情境的效率：</strong></p>
+<ul>
+<li>TCP over Ethernet：85-95%</li>
+<li>高延遲網路（如衛星）：60-80%</li>
+<li>擁塞網路：可能低於 50%</li>
+</ul>
+<hr>
+<h2 id="四ip-位址與遮罩的結構本質"><a href="#四ip-位址與遮罩的結構本質">四、IP 位址與遮罩的結構本質</a></h2>
+<h3 id="ipv4-結構"><a href="#ipv4-結構">IPv4 結構</a></h3>
+<p><strong>IPv4 位址長度：32 bit</strong></p>
+<p><strong>範例：192.168.1.0</strong></p>
+<p>十進位表示：<code>192.168.1.0</code></p>
+<p>二進位表示：<code>11000000.10101000.00000001.00000000</code></p>
+<h3 id="子網路遮罩subnet-mask"><a href="#子網路遮罩subnet-mask">子網路遮罩（Subnet Mask）</a></h3>
+<p>用來區分「網路位址」與「主機位址」</p>
+<p><strong>CIDR 表示法：</strong></p>
+<ul>
+<li><code>/24</code> → 前 24 bit 為網路部分，後 8 bit 為主機部分</li>
+<li><code>/26</code> → 前 26 bit 為網路部分，後 6 bit 為主機部分</li>
+<li><code>/30</code> → 前 30 bit 為網路部分，後 2 bit 為主機部分</li>
+</ul>
+<p><strong>對應的遮罩值：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>CIDR</th><th>遮罩</th><th>網路位元</th><th>主機位元</th></tr></thead><tbody><tr><td>/24</td><td>255.255.255.0</td><td>24</td><td>8</td></tr><tr><td>/25</td><td>255.255.255.128</td><td>25</td><td>7</td></tr><tr><td>/26</td><td>255.255.255.192</td><td>26</td><td>6</td></tr><tr><td>/27</td><td>255.255.255.224</td><td>27</td><td>5</td></tr><tr><td>/28</td><td>255.255.255.240</td><td>28</td><td>4</td></tr><tr><td>/29</td><td>255.255.255.248</td><td>29</td><td>3</td></tr><tr><td>/30</td><td>255.255.255.252</td><td>30</td><td>2</td></tr></tbody></table>
+<hr>
+<h2 id="五可用主機數的計算原理"><a href="#五可用主機數的計算原理">五、可用主機數的計算原理</a></h2>
+<h3 id="基本公式"><a href="#基本公式">基本公式</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>可用主機數 = 2^n - 2</span></span></code></pre>
+<p><strong>其中：</strong> n = 主機位元數</p>
+<p><strong>減 2 的原因：</strong></p>
+<ul>
+<li>全 0 → 網路位址（Network Address）</li>
+<li>全 1 → 廣播位址（Broadcast Address）</li>
+</ul>
+<h3 id="計算範例"><a href="#計算範例">計算範例</a></h3>
+<p><strong>範例 1：/24 網段</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主機位元 = 32 - 24 = 8</span></span>
+<span class="line"><span>可用主機數 = 2^8 - 2 = 256 - 2 = 254</span></span></code></pre>
+<p><strong>範例 2：/26 網段</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主機位元 = 32 - 26 = 6</span></span>
+<span class="line"><span>可用主機數 = 2^6 - 2 = 64 - 2 = 62</span></span></code></pre>
+<p><strong>範例 3：/30 網段</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主機位元 = 32 - 30 = 2</span></span>
+<span class="line"><span>可用主機數 = 2^2 - 2 = 4 - 2 = 2</span></span></code></pre>
+<h3 id="常用網段快速參考表"><a href="#常用網段快速參考表">常用網段快速參考表</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>CIDR</th><th>主機位元</th><th>總 IP 數</th><th>可用主機數</th><th>常見用途</th></tr></thead><tbody><tr><td>/24</td><td>8</td><td>256</td><td>254</td><td>小型辦公室網路</td></tr><tr><td>/25</td><td>7</td><td>128</td><td>126</td><td>中型部門</td></tr><tr><td>/26</td><td>6</td><td>64</td><td>62</td><td>小型部門</td></tr><tr><td>/27</td><td>5</td><td>32</td><td>30</td><td>小組網路</td></tr><tr><td>/28</td><td>4</td><td>16</td><td>14</td><td>小型設備群組</td></tr><tr><td>/29</td><td>3</td><td>8</td><td>6</td><td>極小型網路</td></tr><tr><td>/30</td><td>2</td><td>4</td><td>2</td><td>點對點連線</td></tr><tr><td>/31</td><td>1</td><td>2</td><td>2*</td><td>點對點連線（RFC 3021）</td></tr></tbody></table>
+<p><strong>補充：RFC 3021</strong></p>
+<p>/31 可用於點對點連線，不需減 2，因為在點對點網路中不需要網路位址和廣播位址。</p>
+<hr>
+<h2 id="六子網切割的設計邏輯"><a href="#六子網切割的設計邏輯">六、子網切割的設計邏輯</a></h2>
+<h3 id="切割目的"><a href="#切割目的">切割目的</a></h3>
+<ol>
+<li><strong>提高 IP 使用效率</strong>：避免位址浪費</li>
+<li><strong>分隔廣播域</strong>：減少網路流量</li>
+<li><strong>強化管理與安全性</strong>：邏輯隔離不同部門</li>
+</ol>
+<h3 id="借用位元的效果"><a href="#借用位元的效果">借用位元的效果</a></h3>
+<p><strong>以 /24 (Class C) 為例：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>借用主機位元數</th><th>新遮罩</th><th>子網數量</th><th>每子網可用主機</th></tr></thead><tbody><tr><td>1 bit</td><td>/25</td><td>2</td><td>126</td></tr><tr><td>2 bit</td><td>/26</td><td>4</td><td>62</td></tr><tr><td>3 bit</td><td>/27</td><td>8</td><td>30</td></tr><tr><td>4 bit</td><td>/28</td><td>16</td><td>14</td></tr><tr><td>5 bit</td><td>/29</td><td>32</td><td>6</td></tr><tr><td>6 bit</td><td>/30</td><td>64</td><td>2</td></tr></tbody></table>
+<h3 id="子網切割範例"><a href="#子網切割範例">子網切割範例</a></h3>
+<p><strong>情境：</strong></p>
+<ul>
+<li>原始網段：192.168.1.0/24</li>
+<li>需求：切成 4 個子網</li>
+</ul>
+<p><strong>計算：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>需要 4 個子網 → 需要借 2 個 bit（2^2 = 4）</span></span>
+<span class="line"><span>原本 /24 → 借 2 bit → 新遮罩 /26</span></span></code></pre>
+<p><strong>結果：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>子網</th><th>網路位址</th><th>可用範圍</th><th>廣播位址</th></tr></thead><tbody><tr><td>1</td><td>192.168.1.0</td><td>192.168.1.1 - 192.168.1.62</td><td>192.168.1.63</td></tr><tr><td>2</td><td>192.168.1.64</td><td>192.168.1.65 - 192.168.1.126</td><td>192.168.1.127</td></tr><tr><td>3</td><td>192.168.1.128</td><td>192.168.1.129 - 192.168.1.190</td><td>192.168.1.191</td></tr><tr><td>4</td><td>192.168.1.192</td><td>192.168.1.193 - 192.168.1.254</td><td>192.168.1.255</td></tr></tbody></table>
+<h3 id="設計時的平衡考量"><a href="#設計時的平衡考量">設計時的平衡考量</a></h3>
+<p>需要在以下三者之間取得平衡：</p>
+<ul>
+<li>子網數量</li>
+<li>每子網主機數</li>
+<li>管理複雜度</li>
+</ul>
+<hr>
+<h2 id="七進階觀念補充"><a href="#七進階觀念補充">七、進階觀念補充</a></h2>
+<h3 id="1-vlsmvariable-length-subnet-mask可變長度子網路遮罩"><a href="#1-vlsmvariable-length-subnet-mask可變長度子網路遮罩">1. VLSM（Variable Length Subnet Mask，可變長度子網路遮罩）</a></h3>
+<p><strong>核心概念：</strong> 可依實際需求分配不同大小的子網</p>
+<p><strong>傳統子網切割的問題：</strong></p>
+<ul>
+<li>所有子網大小相同</li>
+<li>容易造成 IP 位址浪費</li>
+</ul>
+<p><strong>VLSM 的優勢：</strong></p>
+<ul>
+<li>彈性分配</li>
+<li>最大化 IP 使用效率</li>
+</ul>
+<p><strong>實例：</strong></p>
+<p>假設公司有以下需求：</p>
+<ul>
+<li>部門 A：需要 100 台設備</li>
+<li>部門 B：需要 50 台設備</li>
+<li>部門 C：需要 20 台設備</li>
+<li>3 條點對點連線：各需要 2 個 IP</li>
+</ul>
+<p><strong>VLSM 規劃：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>部門</th><th>需求</th><th>配置網段</th><th>遮罩</th><th>可用主機</th></tr></thead><tbody><tr><td>部門 A</td><td>100</td><td>192.168.1.0/25</td><td>/25</td><td>126</td></tr><tr><td>部門 B</td><td>50</td><td>192.168.1.128/26</td><td>/26</td><td>62</td></tr><tr><td>部門 C</td><td>20</td><td>192.168.1.192/27</td><td>/27</td><td>30</td></tr><tr><td>連線 1</td><td>2</td><td>192.168.1.224/30</td><td>/30</td><td>2</td></tr><tr><td>連線 2</td><td>2</td><td>192.168.1.228/30</td><td>/30</td><td>2</td></tr><tr><td>連線 3</td><td>2</td><td>192.168.1.232/30</td><td>/30</td><td>2</td></tr></tbody></table>
+<p><strong>VLSM 規劃原則：</strong></p>
+<ol>
+<li>先分配需求最大的</li>
+<li>由大到小依序分配</li>
+<li>避免位址重疊</li>
+</ol>
+<h3 id="2-cidr-與路由聚合route-aggregation"><a href="#2-cidr-與路由聚合route-aggregation">2. CIDR 與路由聚合（Route Aggregation）</a></h3>
+<p><strong>CIDR 不僅用於子網劃分，也能縮減路由表大小</strong></p>
+<p><strong>聚合範例：</strong></p>
+<p>原本有 4 個獨立的 /24 網段：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>192.168.0.0/24</span></span>
+<span class="line"><span>192.168.1.0/24</span></span>
+<span class="line"><span>192.168.2.0/24</span></span>
+<span class="line"><span>192.168.3.0/24</span></span></code></pre>
+<p>可以聚合為一個 /22：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>192.168.0.0/22</span></span></code></pre>
+<p><strong>驗證聚合的正確性：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>192.168.0.0   = 11000000.10101000.00000000.00000000</span></span>
+<span class="line"><span>192.168.3.255 = 11000000.10101000.00000011.11111111</span></span>
+<span class="line"><span>                                  ^^^^^^</span></span>
+<span class="line"><span>                                  前 22 bit 相同</span></span>
+<span class="line"><span>因此可聚合為 /22</span></span></code></pre>
+<p><strong>聚合的好處：</strong></p>
+<ul>
+<li>減少路由表項目</li>
+<li>降低路由器負擔</li>
+<li>加快路由查找速度</li>
+</ul>
+<p><strong>聚合的限制：</strong></p>
+<ul>
+<li>必須是連續的網段</li>
+<li>必須從 2 的次方邊界開始</li>
+</ul>
+<h3 id="3-ipv6-簡介"><a href="#3-ipv6-簡介">3. IPv6 簡介</a></h3>
+<p><strong>基本特性：</strong></p>
+<ul>
+<li>位址長度：<strong>128 bit</strong>（IPv4 是 32 bit）</li>
+<li>表示方式：8 組 16 進位，用冒號分隔</li>
+<li>範例：<code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code></li>
+</ul>
+<p><strong>常見簡化規則：</strong></p>
+<ol>
+<li>每組前導零可省略：<code>0db8</code> → <code>db8</code></li>
+<li>連續的零可用 <code>::</code> 取代一次：<code>2001:0db8:0000:0000:0000:0000:0000:0001</code> → <code>2001:db8::1</code></li>
+</ol>
+<p><strong>常見子網配置：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>用途</th><th>典型前綴</th><th>說明</th></tr></thead><tbody><tr><td>ISP 分配給客戶</td><td>/48</td><td>可切出 65,536 個 /64 子網</td></tr><tr><td>企業內部使用</td><td>/56</td><td>可切出 256 個 /64 子網</td></tr><tr><td>單一網段</td><td>/64</td><td><strong>最常見配置</strong></td></tr><tr><td>點對點連線</td><td>/127</td><td>類似 IPv4 的 /31</td></tr></tbody></table>
+<p><strong>為什麼 /64 最常見？</strong></p>
+<ol>
+<li><strong>SLAAC 自動配置需要</strong>：IPv6 的無狀態位址自動配置（SLAAC）使用 EUI-64 格式，需要 64 bit 的主機部分</li>
+<li><strong>足夠的位址空間</strong>：2^64 ≈ 1800 京個位址，永遠用不完</li>
+<li><strong>簡化管理</strong>：統一使用 /64，不需計算子網大小</li>
+</ol>
+<p><strong>IPv6 子網設計重點：</strong></p>
+<ul>
+<li>不再擔心位址不足</li>
+<li>著重於<strong>管理清晰度</strong>與<strong>安全性</strong></li>
+<li>通常按照組織架構或功能劃分</li>
+</ul>
+<hr>
+<h2 id="八網路計算的真正意義"><a href="#八網路計算的真正意義">八、網路計算的真正意義</a></h2>
+<p>計算網路不是為了套公式，而是在回答三個核心問題：</p>
+<h3 id="1-系統需要支援多少設備"><a href="#1-系統需要支援多少設備">1. 系統需要支援多少設備？</a></h3>
+<ul>
+<li>評估目前與未來 3-5 年的成長</li>
+<li>預留適當的擴充空間（通常保留 20-30%）</li>
+</ul>
+<h3 id="2-是否需要進行區域分割與隔離"><a href="#2-是否需要進行區域分割與隔離">2. 是否需要進行區域分割與隔離？</a></h3>
+<ul>
+<li>不同部門是否需要邏輯隔離？</li>
+<li>是否有安全性考量（DMZ、內網、管理網路）？</li>
+<li>如何控制廣播域大小？</li>
+</ul>
+<h3 id="3-如何在效率與管理成本之間取得平衡"><a href="#3-如何在效率與管理成本之間取得平衡">3. 如何在效率與管理成本之間取得平衡？</a></h3>
+<ul>
+<li>過大的網段：IP 充足但管理困難、廣播風暴風險</li>
+<li>過小的網段：管理清晰但 IP 可能不足、路由表膨脹</li>
+</ul>
+<p><strong>這正是網路設計的工程思維。</strong></p>
+<hr>
+<h2 id="九實務案例分析"><a href="#九實務案例分析">九、實務案例分析</a></h2>
+<h3 id="案例-1中小企業網路規劃"><a href="#案例-1中小企業網路規劃">案例 1：中小企業網路規劃</a></h3>
+<p><strong>需求：</strong></p>
+<ul>
+<li>員工數：150 人</li>
+<li>部門：業務、工程、行政、訪客</li>
+<li>設備：電腦、IP 電話、印表機、無線 AP</li>
+</ul>
+<p><strong>分析：</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>業務部：50 人 × 1.5 倍（電腦+電話）≈ 75 台</span></span>
+<span class="line"><span>工程部：30 人 × 2 倍（多台設備）≈ 60 台</span></span>
+<span class="line"><span>行政部：20 人 × 1.5 倍 ≈ 30 台</span></span>
+<span class="line"><span>訪客網路：預留 30 台</span></span>
+<span class="line"><span>基礎設施：印表機、伺服器、AP 等 ≈ 20 台</span></span></code></pre>
+<p><strong>建議方案：</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>網段</th><th>CIDR</th><th>可用主機</th><th>用途</th></tr></thead><tbody><tr><td>192.168.10.0/25</td><td>/25</td><td>126</td><td>業務部</td></tr><tr><td>192.168.10.128/26</td><td>/26</td><td>62</td><td>工程部</td></tr><tr><td>192.168.11.0/26</td><td>/26</td><td>62</td><td>行政部</td></tr><tr><td>192.168.11.64/26</td><td>/26</td><td>62</td><td>訪客網路（隔離）</td></tr><tr><td>192.168.11.128/27</td><td>/27</td><td>30</td><td>基礎設施</td></tr></tbody></table>
+<h3 id="案例-2資料中心點對點連線"><a href="#案例-2資料中心點對點連線">案例 2：資料中心點對點連線</a></h3>
+<p><strong>需求：</strong></p>
+<ul>
+<li>10 對伺服器之間的直連網路</li>
+</ul>
+<p><strong>方案：</strong></p>
+<ul>
+<li>使用 /30 或 /31</li>
+<li>/30：每條連線 4 個 IP，可用 2 個</li>
+<li>/31：每條連線 2 個 IP，可用 2 個（RFC 3021）</li>
+</ul>
+<p><strong>推薦：</strong> 使用 /31 節省位址空間</p>
+<hr>
+<h2 id="十常見錯誤與陷阱"><a href="#十常見錯誤與陷阱">十、常見錯誤與陷阱</a></h2>
+<h3 id="-錯誤-1單位轉換錯誤"><a href="#-錯誤-1單位轉換錯誤">❌ 錯誤 1：單位轉換錯誤</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>錯誤：10 Mbps = 10 MB/s</span></span>
+<span class="line"><span>正確：10 Mbps = 10 ÷ 8 = 1.25 MB/s</span></span></code></pre>
+<h3 id="-錯誤-2忘記扣除網路位址和廣播位址"><a href="#-錯誤-2忘記扣除網路位址和廣播位址">❌ 錯誤 2：忘記扣除網路位址和廣播位址</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>錯誤：/24 有 256 個可用 IP</span></span>
+<span class="line"><span>正確：/24 有 254 個可用 IP（256 - 2）</span></span></code></pre>
+<h3 id="-錯誤-3過度切割子網"><a href="#-錯誤-3過度切割子網">❌ 錯誤 3：過度切割子網</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>問題：10 台設備卻配置 /28（14 個可用 IP）</span></span>
+<span class="line"><span>風險：未來擴充困難</span></span>
+<span class="line"><span>建議：預留成長空間，使用 /26 或 /27</span></span></code></pre>
+<h3 id="-錯誤-4過大的網段"><a href="#-錯誤-4過大的網段">❌ 錯誤 4：過大的網段</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>問題：50 台設備卻配置 /16（65,534 個可用 IP）</span></span>
+<span class="line"><span>風險：</span></span>
+<span class="line"><span>- 廣播域過大，影響效能</span></span>
+<span class="line"><span>- 管理困難</span></span>
+<span class="line"><span>- 安全性問題</span></span></code></pre>
+<h3 id="-錯誤-5vlsm-分配順序錯誤"><a href="#-錯誤-5vlsm-分配順序錯誤">❌ 錯誤 5：VLSM 分配順序錯誤</a></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>錯誤：先分配小網段，再分配大網段</span></span>
+<span class="line"><span>結果：位址空間碎片化，大網段無連續空間</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>正確：</span></span>
+<span class="line"><span>1. 先分配需求最大的</span></span>
+<span class="line"><span>2. 由大到小依序分配</span></span></code></pre> </div> <div class="post-footer" data-astro-cid-gysqo7gh> <a href="/blog" class="back-link" data-astro-cid-gysqo7gh>← 返回文章列表</a> </div> </article> <aside class="toc-sidebar" data-astro-cid-gysqo7gh> <nav class="toc" data-astro-cid-xvrfupwn> <!-- Title removed as requested --> <ul data-astro-cid-xvrfupwn> <li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#一資料單位與位元結構" title="一、資料單位與位元結構" data-astro-cid-xvrfupwn>一、資料單位與位元結構</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#二傳輸速率與時間的計算邏輯" title="二、傳輸速率與時間的計算邏輯" data-astro-cid-xvrfupwn>二、傳輸速率與時間的計算邏輯</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#三頻寬與實際效能的差異" title="三、頻寬與實際效能的差異" data-astro-cid-xvrfupwn>三、頻寬與實際效能的差異</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#四ip-位址與遮罩的結構本質" title="四、IP 位址與遮罩的結構本質" data-astro-cid-xvrfupwn>四、IP 位址與遮罩的結構本質</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#五可用主機數的計算原理" title="五、可用主機數的計算原理" data-astro-cid-xvrfupwn>五、可用主機數的計算原理</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#六子網切割的設計邏輯" title="六、子網切割的設計邏輯" data-astro-cid-xvrfupwn>六、子網切割的設計邏輯</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#七進階觀念補充" title="七、進階觀念補充" data-astro-cid-xvrfupwn>七、進階觀念補充</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#八網路計算的真正意義" title="八、網路計算的真正意義" data-astro-cid-xvrfupwn>八、網路計算的真正意義</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#九實務案例分析" title="九、實務案例分析" data-astro-cid-xvrfupwn>九、實務案例分析</a> </li><li class="toc-item depth-2" data-astro-cid-xvrfupwn> <a href="#十常見錯誤與陷阱" title="十、常見錯誤與陷阱" data-astro-cid-xvrfupwn>十、常見錯誤與陷阱</a> </li> </ul> </nav> <script type="module">const s=e=>{e.forEach(t=>{if(t.isIntersecting){const o=t.target.getAttribute("id");if(o){document.querySelectorAll(".toc a").forEach(c=>{c.classList.remove("active")});const r=document.querySelector(`.toc a[href="#${o}"]`);r&&r.classList.add("active")}}})},i=new IntersectionObserver(s,{rootMargin:"-10% 0px -80% 0px",threshold:0});document.querySelectorAll(".post-body h2, .post-body h3").forEach(e=>{i.observe(e)});</script>  </aside> </div>  </main> </div> </body></html> 

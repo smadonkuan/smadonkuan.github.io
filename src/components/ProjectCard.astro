@@ -39,7 +39,7 @@ const lastUpdated = new Date(repo.updated_at).toLocaleDateString('zh-TW', {
     </h3>
   </div>
   
-  <p class="description">{repo.description || "No description provided."}</p>
+  {repo.description && <p class="description">{repo.description}</p>}
   
   <div class="card-footer">
     <div class="language">

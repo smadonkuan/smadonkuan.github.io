@@ -1,0 +1,197 @@
+---
+interface Props {
+  posts: any[];
+}
+
+const { posts } = Astro.props;
+
+const serializablePosts = posts.map(post => ({
+  slug: post.slug,
+  data: {
+    title: post.data.title,
+    date: post.data.date,
+    excerpt: post.data.excerpt,
+    tags: post.data.tags || []
+  }
+}));
+---
+
+<div class="search-compact">
+  <div class="search-input-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input 
+      type="text" 
+      id="search-input" 
+      placeholder="Search..."
+      autocomplete="off"
+    >
+  </div>
+  
+  <div id="search-results" class="search-results" style="display: none;"></div>
+</div>
+
+<script define:vars={{ initialPosts: serializablePosts }}>
+  const searchInput = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results');
+  const searchWrapper = document.querySelector('.search-compact');
+
+  if (searchInput && resultsContainer) {
+    // Hide results when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchWrapper.contains(e.target)) {
+        resultsContainer.style.display = 'none';
+      }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      
+      if (!searchTerm) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      const filteredPosts = initialPosts.filter(post => {
+        const titleMatch = post.data.title.toLowerCase().includes(searchTerm);
+        const excerptMatch = post.data.excerpt?.toLowerCase().includes(searchTerm);
+        const tagsMatch = post.data.tags?.some(tag => tag.toLowerCase().includes(searchTerm));
+        return titleMatch || excerptMatch || tagsMatch;
+      });
+
+      if (filteredPosts.length > 0) {
+        resultsContainer.style.display = 'block';
+        resultsContainer.innerHTML = filteredPosts.map(post => `
+          <a href="/blog/${post.slug}" class="search-result-item">
+            <div class="result-title">${post.data.title}</div>
+            <div class="result-date">${new Date(post.data.date).toLocaleDateString('zh-TW')}</div>
+          </a>
+        `).join('');
+      } else {
+        resultsContainer.style.display = 'block';
+        resultsContainer.innerHTML = '<div class="no-results">No matches found</div>';
+      }
+    });
+    
+    // Show results again if input has value and is focused
+    searchInput.addEventListener('focus', () => {
+      if (searchInput.value.trim() !== '' && resultsContainer.innerHTML !== '') {
+        resultsContainer.style.display = 'block';
+      }
+    });
+  }
+</script>
+
+<style>
+  .search-compact {
+    position: relative;
+    width: 300px; /* Width of the search box */
+    z-index: 9000;
+  }
+
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #999;
+    pointer-events: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    transition: all 0.3s;
+    outline: none;
+    background: #f8f9fa;
+  }
+
+  input:focus {
+    background: #fff;
+    border-color: #E8714C;
+    box-shadow: 0 0 0 2px rgba(232, 113, 76, 0.1);
+    /* Removed width expansion to prevent layout shift */
+  }
+
+  .search-results {
+    position: absolute;
+    top: 100%;
+    right: 0; /* Align right */
+    width: 300px; /* Results can be wider than input */
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999; /* Ensure it floats on top of everything */
+  }
+  
+  /* Custom Scrollbar for results */
+  .search-results::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .search-results::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .search-results::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 2px;
+  }
+
+  :global(.search-result-item) {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s;
+  }
+  
+  :global(.search-result-item:last-child) {
+    border-bottom: none;
+  }
+
+  :global(.search-result-item:hover) {
+    background-color: #f8f9fa;
+  }
+
+  :global(.result-title) {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  
+  :global(.search-result-item:hover .result-title) {
+    color: #E8714C;
+  }
+
+  :global(.result-date) {
+    font-size: 12px;
+    color: #999;
+  }
+
+  :global(.no-results) {
+    padding: 12px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+  }
+</style>

@@ -5,8 +5,8 @@ import { getGithubRepos } from '../utils/github';
 import ProjectCard from '../components/ProjectCard.astro';
 
 const posts = await getCollection('posts');
-// 這裡可以加入日期排序邏輯，目前先取前 5 篇
-const recentPosts = posts.slice(0, 5);
+// 加入日期排序邏輯，先取前 2 篇
+const recentPosts = posts.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 2);
 
 // Fetch Projects
 const { repos, error } = await getGithubRepos();
@@ -24,7 +24,7 @@ const featuredProjects = repos.slice(0, 3);
     <!-- 精選專案和最新文章 -->
     <div class="featured-section">
         <div class="featured-column">
-            <h2>✨ 精選專案</h2>
+            <h2> 精選專案</h2>
             <div id="featured-projects">
                 {error && (
                      <p style="text-align: center; color: #E8714C; font-size: 14px; margin-bottom: 10px;">
@@ -44,7 +44,7 @@ const featuredProjects = repos.slice(0, 3);
         </div>
 
         <div class="featured-column">
-            <h2>📝 最新文章</h2>
+            <h2>最新文章</h2>
             <div id="featured-posts">
                 {recentPosts.length === 0 ? (
                     <p style="text-align: center; color: #999;">目前沒有文章</p>

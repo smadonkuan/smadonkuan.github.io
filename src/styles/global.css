@@ -20,7 +20,6 @@ body {
     grid-template-columns: 320px 1fr;
     min-height: 100vh;
     max-width: 100%;
-    /* Changed from 1400px to 100% for full width */
     margin: 0 auto;
 }
 
@@ -197,10 +196,16 @@ main {
 /* ===== 導航標籤 ===== */
 .nav-tabs {
     display: flex;
-    gap: 40px;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 80px;
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 20px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
 }
 
 /* ===== 單個導航標籤 ===== */

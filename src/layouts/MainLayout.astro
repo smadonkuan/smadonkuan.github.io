@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
 import { getGithubRepos } from '../utils/github';
+import Search from '../components/Search.astro';
 
 interface Props {
 	title?: string;
@@ -79,18 +80,21 @@ const navItems = [
 			</div>
 		</aside>
 
-		<!-- 主內容 -->
-		<main>
-			<div class="nav-tabs">
-				{navItems.map(item => (
-					<a href={item.path} class={`nav-tab ${currentPath === item.path ? 'active' : ''}`}>
-						{item.name}
-					</a>
-				))}
-			</div>
+    <!-- 主內容 -->
+    <main>
+      <div class="nav-tabs">
+        <div class="nav-links">
+          {navItems.map(item => (
+            <a href={item.path} class={`nav-tab ${currentPath === item.path ? 'active' : ''}`}>
+              {item.name}
+            </a>
+          ))}
+        </div>
+        <Search posts={posts} />
+      </div>
 
-			<slot />
-		</main>
-	</div>
+      <slot />
+    </main>
+  </div>
 </body>
 </html>

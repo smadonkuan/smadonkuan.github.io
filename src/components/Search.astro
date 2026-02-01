@@ -67,7 +67,13 @@ const serializablePosts = posts.map(post => ({
         resultsContainer.innerHTML = filteredPosts.map(post => `
           <a href="/blog/${post.slug}" class="search-result-item">
             <div class="result-title">${post.data.title}</div>
-            <div class="result-date">${new Date(post.data.date).toLocaleDateString('zh-TW')}</div>
+            <div class="result-date">${(() => {
+              const d = new Date(post.data.date);
+              const year = d.getFullYear();
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const day = String(d.getDate()).padStart(2, '0');
+              return `${year}年${month}月${day}日`;
+            })()}</div>
           </a>
         `).join('');
       } else {

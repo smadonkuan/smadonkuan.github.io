@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { getCollection } from 'astro:content';
 import { getGithubRepos } from '../utils/github';
 import Search from '../components/Search.astro';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title?: string;
@@ -33,6 +34,7 @@ const navItems = [
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{title}</title>
+	<ClientRouter />
 </head>
 <body>
 	<div class="wrapper">

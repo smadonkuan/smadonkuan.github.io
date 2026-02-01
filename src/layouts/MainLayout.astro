@@ -103,7 +103,9 @@ const navItems = [
             </a>
           ))}
         </div>
-        <Search posts={posts} />
+        <div class="nav-search-wrap">
+          <Search posts={posts} />
+        </div>
       </div>
 
       <slot />
@@ -127,30 +129,33 @@ const navItems = [
       const newMenuToggle = document.getElementById('menu-toggle');
       const newOverlay = document.getElementById('drawer-overlay');
 
-      function toggleMenu() {
-        const isClosed = !sidebar.classList.contains('active');
-        if (isClosed) {
-          sidebar.classList.add('active');
-          overlay.classList.add('active');
-          body.style.overflow = 'hidden'; 
-        } else {
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-          body.style.overflow = '';
-        }
+      function openMenu() {
+        sidebar.classList.add('active');
+        newOverlay.classList.add('active');
+        body.classList.add('menu-open');
+        body.style.overflow = 'hidden';
       }
 
-      newMenuToggle.addEventListener('click', toggleMenu);
-      newOverlay.addEventListener('click', toggleMenu);
+      function closeMenu() {
+        sidebar.classList.remove('active');
+        newOverlay.classList.remove('active');
+        body.classList.remove('menu-open');
+        body.style.overflow = '';
+      }
 
-      // Close menu when clicking a link inside the sidebar
+      // 打開／關閉：按 menu-toggle 或點 overlay 都可
+      newMenuToggle.addEventListener('click', () => {
+        if (sidebar.classList.contains('active')) closeMenu();
+        else openMenu();
+      });
+
+      // 關閉：點擊任意處（overlay），不包含彈出視窗（sidebar）
+      newOverlay.addEventListener('click', closeMenu);
+
+      // 點側欄內連結時也關閉
       const sidebarLinks = sidebar.querySelectorAll('a');
       sidebarLinks.forEach(link => {
-        link.addEventListener('click', () => {
-           sidebar.classList.remove('active');
-           overlay.classList.remove('active');
-           body.style.overflow = '';
-        });
+        link.addEventListener('click', closeMenu);
       });
     }
 

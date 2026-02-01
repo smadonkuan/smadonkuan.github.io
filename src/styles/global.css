@@ -653,6 +653,11 @@ main {
         padding: 4px;
     }
 
+    /* 選單開啟時：header 浮在 overlay 之上，點 ☰ 不會關閉（只會點到按鈕） */
+    body.menu-open .mobile-header {
+        z-index: 1003;
+    }
+
     /* Drawer Sidebar */
     aside {
         position: fixed;
@@ -718,6 +723,12 @@ main {
 
     .nav-tab {
         white-space: nowrap;
+    }
+
+    /* 手機版：搜尋區 z-index 低於 overlay(1001)/sidebar(1002)，選單打開時會被遮住，且點空白(overlay)可關閉選單 */
+    .nav-search-wrap {
+        z-index: 100;
+        position: relative;
     }
 
     .section-title {

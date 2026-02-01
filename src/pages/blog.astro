@@ -5,6 +5,14 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('posts');
 // 排序邏輯：新的在前 (假設日期格式 YYYY年 MM月 DD日 可簡單字串排序，或是保持原順序)
 // 這裡暫時保持原順序
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}年${month}月${day}日`;
+}
 ---
 
 <MainLayout title="Blog - 呂依璇 Elaine Lu" currentPath="/blog">
@@ -19,7 +27,7 @@ const posts = await getCollection('posts');
                     <div class="blog-card">
                         <h3><a href={`/posts/${post.slug}`} style="color: inherit; text-decoration: none;">{post.data.title}</a></h3>
                         <div class="project-meta">
-                            <span>{post.data.date}</span> • <span>{post.data.readTime}</span>
+                            <span>{formatDate(post.data.date)}</span> • <span>{post.data.readTime || '5 min read'}</span>
                         </div>
                         <p>{post.data.excerpt}</p>
                         <div class="tech-stack">

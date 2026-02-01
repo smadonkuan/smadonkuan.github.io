@@ -1,6 +1,6 @@
 ---
 title: "物件導向程式設計：四大核心概念"
-date: "2026年 01月 29日"
+date: "2026-01-29"
 excerpt: "深入探討 OOP 的四大核心概念：封裝、繼承、多型、抽象。從基礎理論到實戰案例，搭配 Java、PHP、Python 範例，讓你真正掌握物件導向程式設計的精髓。"
 tags: ["OOP", "Java", "PHP", "Python", "程式設計", "軟體工程"]
 readTime: "25 min read"

@@ -1,6 +1,6 @@
 ---
 title: "【技術研究】從 Reprompt 漏洞看 AI 安全：當「聽話」成為 Copilot 最致命的弱點"
-date: "2026年 01月 27日"
+date: "2026-01-27"
 excerpt: "深入解析 Microsoft Copilot 的 Reprompt 攻擊原理。探討駭客如何利用 URL 參數進行間接提示詞注入（Indirect Prompt Injection），以及企業該如何防範數據隱形外洩。"
 tags: ["AI Security", "Copilot", "Prompt Injection", "Cybersecurity", "Red Teaming"]
 readTime: "5 min read"

@@ -1,6 +1,6 @@
 ---
 title: "Race Condition"
-date: "2025年 09月 12日"
+date: "2025-09-12"
 excerpt: "深入了解 Race Condition 的原因、危險和解決方案。"
 tags: ["Threading", "Python", "並發編程"]
 readTime: "12 min read"

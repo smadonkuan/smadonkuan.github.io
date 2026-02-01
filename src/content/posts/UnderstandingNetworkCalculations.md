@@ -3,7 +3,7 @@ title: "電腦網路計算：從資料單位到子網設計"
 date: "2025-12-31"
 excerpt: "介紹網路計算觀念，涵蓋資料單位、傳輸速率、IP 定址與子網規劃。"
 tags: ["電腦網路", "IP 位址", "子網切割", "網路工程"]
-readTime: "12 分鐘閱讀"
+readTime: "12 min read"
 slug: "network-calculations-and-subnet-design"
 ---
 

@@ -23,6 +23,12 @@ body {
     margin: 0 auto;
 }
 
+/* 預設隱藏手機版元件 (桌機版不顯示) */
+.mobile-header,
+.drawer-overlay {
+    display: none;
+}
+
 /* ===== 左側邊欄 ===== */
 aside {
     background: #f8f9fa;
@@ -592,51 +598,140 @@ main {
 @media (max-width: 768px) {
     .wrapper {
         grid-template-columns: 1fr;
+        display: block; /* Remove grid/flex to allow stack */
+        padding-top: 60px; /* Space for fixed header */
+        min-height: auto;
     }
 
-    aside {
-        position: static;
-        height: auto;
-        border-right: none;
+    /* Mobile Header */
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid #e0e0e0;
-        padding: 40px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        height: 60px;
     }
 
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: #000;
+    }
+
+    .mobile-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .mobile-name {
+        font-weight: 700;
+        font-size: 16px;
+        color: #1A3A52;
+    }
+
+    #menu-toggle {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #1A3A52;
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    /* Drawer Sidebar */
+    aside {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 1002; /* Above header */
+        background: #ffffff;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+        padding: 60px 30px 40px; /* Top padding ensures content not blocked by safe area */
+        overflow-y: auto;
+        order: unset; /* Remove order logic */
+        border-top: none;
+    }
+
+    aside.active {
+        transform: translateX(0);
+    }
+
+    /* Overlay */
+    .drawer-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001; /* Between header and sidebar */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+
+    .drawer-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Main Content Adjustments */
     main {
-        padding: 40px 20px;
+        padding: 20px 20px;
+        width: 100%;
     }
 
+    /* Header adjustments inside main */
     .nav-tabs {
+        flex-direction: column;
+        align-items: flex-start;
         gap: 20px;
     }
 
+    .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 5px; /* Scrollbar space */
+        gap: 25px;
+    }
+
+    .nav-tab {
+        white-space: nowrap;
+    }
+
     .section-title {
-        font-size: 22px;
+        font-size: 24px;
+        margin-bottom: 30px;
     }
 
     .content-two-columns {
         grid-template-columns: 1fr;
+        gap: 40px;
     }
 
     .cta-banner {
-        padding: 60px 20px;
-        margin: 60px 0;
-    }
-
-    .cta-banner h2 {
-        font-size: 28px;
-    }
-
-    .cta-banner p {
-        font-size: 16px;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-    }
-
-    .cta-btn {
-        width: 100%;
-        justify-content: center;
+        padding: 50px 20px;
+        margin: 40px 0;
     }
 }

@@ -37,9 +37,20 @@ const navItems = [
 	<ClientRouter />
 </head>
 <body>
+	<div class="mobile-header">
+		<a href="/" class="mobile-brand">
+			<img src="/elaine.png" alt="Elaine Lu" class="mobile-avatar" />
+			<span class="mobile-name">Elaine Lu</span>
+		</a>
+		<button id="menu-toggle" aria-label="Toggle Menu">
+			☰
+		</button>
+	</div>
+
 	<div class="wrapper">
-		<!-- 左側邊欄 -->
-		<aside>
+		<!-- 左側邊欄 (Drawer on mobile) -->
+		<div class="drawer-overlay" id="drawer-overlay"></div>
+		<aside id="sidebar">
 			<div class="profile">
 				<a href="/" style="text-decoration: none; color: inherit;">
 					<img src="/elaine.png" alt="Profile" class="avatar" />
@@ -98,5 +109,56 @@ const navItems = [
       <slot />
     </main>
   </div>
+
+  <script>
+    function initMobileMenu() {
+      const menuToggle = document.getElementById('menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('drawer-overlay');
+      const body = document.body;
+
+      if (!menuToggle || !sidebar || !overlay) return;
+
+      // Remove old listeners to avoid duplicates if re-running
+      menuToggle.replaceWith(menuToggle.cloneNode(true));
+      overlay.replaceWith(overlay.cloneNode(true));
+      
+      // Re-select after cloning
+      const newMenuToggle = document.getElementById('menu-toggle');
+      const newOverlay = document.getElementById('drawer-overlay');
+
+      function toggleMenu() {
+        const isClosed = !sidebar.classList.contains('active');
+        if (isClosed) {
+          sidebar.classList.add('active');
+          overlay.classList.add('active');
+          body.style.overflow = 'hidden'; 
+        } else {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          body.style.overflow = '';
+        }
+      }
+
+      newMenuToggle.addEventListener('click', toggleMenu);
+      newOverlay.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking a link inside the sidebar
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+           sidebar.classList.remove('active');
+           overlay.classList.remove('active');
+           body.style.overflow = '';
+        });
+      });
+    }
+
+    // Run on initial load
+    initMobileMenu();
+
+    // Run on view transitions navigation
+    document.addEventListener('astro:after-swap', initMobileMenu);
+  </script>
 </body>
 </html>

@@ -1,0 +1,154 @@
+---
+---
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="window-controls">
+                <span class="control close"></span>
+                <span class="control minimize"></span>
+                <span class="control maximize"></span>
+            </div>
+            <div class="terminal-title">root@elaine_lab: ~</div>
+        </div>
+        
+        <div class="terminal-content">
+            <div class="line">
+                <span class="prompt">➜</span> <span class="path">~</span> <span class="command">whoami</span>
+            </div>
+            <div class="line output-text">
+                elaine
+            </div>
+
+            <div class="line">
+                <span class="prompt">➜</span> <span class="path">~</span> <span class="command">./welcome.sh</span>
+            </div>
+            
+            <div class="output">
+                <h1 class="glitch-text" data-text="👋 歡迎">👋 歡迎</h1>
+                <p class="typewriter-text">
+                    我是一位資訊安全研究員，希望能認識對資安或科技有興趣的朋友，一起交流、學習。
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+<style>
+
+
+    .terminal-container {
+        width: 100%;
+        margin: 0 0 60px 0;
+        background: rgba(13, 17, 23, 0.95);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(74, 246, 38, 0.1); /* Green glow */
+        border: 1px solid #30363d;
+        font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        position: relative;
+        z-index: 10;
+        overflow: hidden;
+    }
+
+    .terminal-header {
+        background: #161b22;
+        padding: 12px 20px;
+        border-bottom: 1px solid #30363d;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center title */
+        position: relative;
+    }
+
+    .window-controls {
+        display: flex;
+        gap: 8px;
+        position: absolute;
+        left: 20px;
+    }
+
+    .control {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .close { background: #ff5f56; }
+    .minimize { background: #ffbd2e; }
+    .maximize { background: #27c93f; }
+
+    .terminal-title {
+        color: #8b949e;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .terminal-content {
+        padding: 30px;
+        color: #e6edf3;
+    }
+
+    .line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .output-text {
+        color: #e6edf3;
+        margin-bottom: 20px;
+        padding-left: 20px;
+    }
+
+    .prompt { color: #27c93f; font-weight: bold; }
+    .path { color: #58a6ff; font-weight: bold; }
+    .command { color: #e6edf3; }
+
+    .output {
+        margin: 20px 0 30px 20px;
+        border-left: 2px solid #30363d;
+        padding-left: 20px;
+    }
+
+    .output h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .output p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #d1d5db;
+        margin-bottom: 20px;
+    }
+
+    .cursor-blink {
+        width: 10px;
+        height: 18px;
+        background: #e6edf3;
+        animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            padding: 30px 10px;
+        }
+
+        .terminal-content {
+            padding: 20px;
+        }
+
+        .output h1 {
+            font-size: 2rem;
+        }
+    }
+</style>

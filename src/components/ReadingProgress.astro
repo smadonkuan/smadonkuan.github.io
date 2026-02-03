@@ -1,0 +1,53 @@
+---
+// 僅在文章頁使用，顯示於頁面頂部的閱讀進度條
+---
+<div id="reading-progress" class="reading-progress" role="presentation" aria-hidden="true">
+  <div class="reading-progress-bar" id="reading-progress-bar"></div>
+</div>
+
+<script>
+  function updateProgress() {
+    const bar = document.getElementById('reading-progress-bar');
+    const wrapper = document.getElementById('reading-progress');
+    if (!bar || !wrapper) return;
+    const main = document.querySelector('main');
+    if (!main) return;
+    const article = main.querySelector('article');
+    if (!article) return;
+    const rect = article.getBoundingClientRect();
+    const articleTop = rect.top + window.scrollY;
+    const articleHeight = article.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const scrollEnd = articleTop + articleHeight - windowHeight;
+    if (scrollEnd <= 0) {
+      bar.style.width = '100%';
+      return;
+    }
+    const scrolled = window.scrollY - articleTop;
+    const progress = Math.min(1, Math.max(0, scrolled / scrollEnd));
+    bar.style.width = `${progress * 100}%`;
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+  document.addEventListener('astro:page-load', updateProgress);
+</script>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .reading-progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #E8714C, #D45A38);
+    transition: width 0.1s ease-out;
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+/** 程式碼區塊一鍵複製：在 .post-body pre 外層加按鈕，純前端、無 API */
+---
+<div id="code-copy-root" hidden aria-hidden="true"></div>
+
+<script>
+  function addCopyButtons() {
+    const body = document.querySelector('.post-body');
+    if (!body) return;
+    body.querySelectorAll('pre').forEach((pre) => {
+      if (pre.closest('.code-block-wrapper')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'code-copy-btn';
+      btn.setAttribute('aria-label', '複製程式碼');
+      btn.textContent = '複製';
+      const code = pre.querySelector('code');
+      const text = code ? code.textContent || '' : pre.textContent || '';
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = '已複製';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = '複製';
+            btn.classList.remove('copied');
+          }, 1500);
+        } catch (_) {
+          btn.textContent = '複製失敗';
+          setTimeout(() => { btn.textContent = '複製'; }, 1500);
+        }
+      });
+      pre.parentNode?.insertBefore(wrapper, pre);
+      wrapper.appendChild(btn);
+      wrapper.appendChild(pre);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addCopyButtons);
+  else addCopyButtons();
+  document.addEventListener('astro:page-load', addCopyButtons);
+</script>
+
+<style is:global>
+  .post-body .code-block-wrapper {
+    position: relative;
+    margin: 20px 0;
+  }
+  .post-body .code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 1;
+  }
+  .post-body .code-copy-btn:hover {
+    border-color: #E8714C;
+    color: #E8714C;
+    background: #fff9f7;
+  }
+  .post-body .code-copy-btn.copied {
+    border-color: #2e7d32;
+    color: #2e7d32;
+    background: #e8f5e9;
+  }
+  .post-body .code-block-wrapper > pre {
+    padding-top: 44px;
+  }
+</style>

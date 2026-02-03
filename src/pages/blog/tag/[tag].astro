@@ -1,0 +1,73 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const published = posts.filter((p) => !p.data.draft);
+  const tagSet = new Set<string>();
+  published.forEach((p) => p.data.tags.forEach((t: string) => tagSet.add(t)));
+  return Array.from(tagSet).map((tag) => {
+    const tagPosts = published
+      .filter((p) => p.data.tags.includes(tag))
+      .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+    return {
+      params: { tag },
+      props: { tag, posts: tagPosts },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+const decodedTag = decodeURIComponent(tag);
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}年${month}月${day}日`;
+}
+---
+
+<MainLayout title={`標籤：${decodedTag} - 呂依璇 Elaine Lu`} currentPath="/blog">
+  <div class="post">
+    <h1 class="section-title">標籤：{decodedTag}</h1>
+    <p class="tag-desc">
+      <a href="/blog" class="back-link">← 返回全部文章</a>
+    </p>
+    <div id="posts-container">
+      {posts.length === 0 ? (
+        <p style="text-align: center; color: #999;">此標籤下尚無文章</p>
+      ) : (
+        posts.map((post) => (
+          <div class="blog-card">
+            <h3><a href={`/posts/${post.slug}`} style="color: inherit; text-decoration: none;">{post.data.title}</a></h3>
+            <div class="project-meta">
+              <span>{formatDate(post.data.date)}</span> • <span>{post.data.readTime ?? '5 min read'}</span>
+            </div>
+            <p>{post.data.excerpt}</p>
+            <div class="tech-stack">
+              {post.data.tags.map((t: string) => (
+                <a href={`/blog/tag/${encodeURIComponent(t)}`} class={`tech-badge tag-link ${t === decodedTag ? 'active' : ''}`}>{t}</a>
+              ))}
+            </div>
+            <a href={`/posts/${post.slug}`} class="btn">Read Article →</a>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .tag-desc {
+    margin-bottom: 1.5rem;
+    color: #666;
+  }
+  .tag-link.active {
+    background: #E8714C;
+    color: white;
+    border-color: #E8714C;
+  }
+</style>

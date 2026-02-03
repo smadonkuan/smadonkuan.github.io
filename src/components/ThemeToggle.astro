@@ -1,0 +1,69 @@
+---
+/** 深色／淺色切換，偏好存 localStorage，宅宅必備 */
+---
+<button type="button" class="theme-toggle" aria-label="切換深色模式" title="切換深色／淺色">
+  <span class="theme-icon sun" aria-hidden="true">☀️</span>
+  <span class="theme-icon moon" aria-hidden="true">🌙</span>
+</button>
+
+<script>
+  (function () {
+    const KEY = 'theme';
+    const getStored = () => localStorage.getItem(KEY);
+    const setStored = (v) => { try { localStorage.setItem(KEY, v); } catch (_) {} };
+    const prefersDark = () => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    function applyTheme(dark) {
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.querySelectorAll('.theme-toggle').forEach(function(btn) { btn.classList.toggle('dark', dark); });
+    }
+
+    function init() {
+      const stored = getStored();
+      const dark = stored === 'dark' || (stored !== 'light' && prefersDark());
+      applyTheme(dark);
+    }
+
+    function toggle() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      applyTheme(!isDark);
+      setStored(isDark ? 'light' : 'dark');
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+    document.querySelectorAll('.theme-toggle').forEach(function(btn) { btn.addEventListener('click', toggle); });
+    document.addEventListener('astro:page-load', function() {
+      init();
+      document.querySelectorAll('.theme-toggle').forEach(function(btn) { btn.addEventListener('click', toggle); });
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color, #e0e0e0);
+    background: var(--bg-secondary, #fff);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent, #E8714C);
+    background: var(--bg-hover, #fff9f7);
+  }
+  .theme-icon {
+    position: absolute;
+    font-size: 18px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .theme-icon.moon { opacity: 0; }
+  .theme-toggle.dark .theme-icon.sun { opacity: 0; }
+  .theme-toggle.dark .theme-icon.moon { opacity: 1; }
+</style>

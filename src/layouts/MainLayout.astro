@@ -3,14 +3,22 @@ import '../styles/global.css';
 import { getCollection } from 'astro:content';
 import { getGithubRepos } from '../utils/github';
 import Search from '../components/Search.astro';
+import VisitorCount from '../components/VisitorCount.astro';
+import BackToTop from '../components/BackToTop.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title?: string;
 	currentPath?: string;
+	description?: string;
+	canonicalUrl?: string;
+	ogImage?: string;
 }
 
-const { title = "呂依璇 Elaine Lu - Information Security Researcher", currentPath = "/" } = Astro.props;
+const { title = "呂依璇 Elaine Lu - Information Security Researcher", currentPath = "/", description, canonicalUrl, ogImage } = Astro.props;
+const siteUrl = import.meta.env.SITE ?? 'https://smadonkuan.github.io';
+const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).href) : new URL('/elaine.png', siteUrl).href;
 
 // Fetch Stats
 const posts = await getCollection('posts');
@@ -26,14 +34,31 @@ const navItems = [
 	{ name: 'Blog', path: '/blog' },
 	{ name: 'Contact', path: '/contact' },
 ];
+
+// 選用：Plausible Analytics，可看到訪客來源、UTM（哪個 IG 連結）
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
 ---
 
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 	<title>{title}</title>
+	{description && <meta name="description" content={description} />}
+	{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+	<meta property="og:title" content={title} />
+	{description && <meta property="og:description" content={description} />}
+	<meta property="og:image" content={fullOgImage} />
+	{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+	<meta property="og:type" content={canonicalUrl ? "article" : "website"} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={title} />
+	{description && <meta name="twitter:description" content={description} />}
+	<!-- RSS 先註解
+	<link rel="alternate" type="application/rss+xml" title="呂依璇 Elaine Lu - Blog RSS" href="/rss.xml" />
+	-->
+	{plausibleDomain && <script defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js" />}
 	<ClientRouter />
 </head>
 <body>
@@ -42,9 +67,12 @@ const navItems = [
 			<img src="/elaine.png" alt="Elaine Lu" class="mobile-avatar" />
 			<span class="mobile-name">Elaine Lu</span>
 		</a>
-		<button id="menu-toggle" aria-label="Toggle Menu">
-			☰
-		</button>
+		<div class="mobile-header-actions">
+			<ThemeToggle />
+			<button id="menu-toggle" type="button" aria-label="開啟選單">
+				<span aria-hidden="true">☰</span>
+			</button>
+		</div>
 	</div>
 
 	<div class="wrapper">
@@ -91,6 +119,9 @@ const navItems = [
 					<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" width="20" height="20">
 				</a>
 			</div>
+			<div class="sidebar-extra">
+				<ThemeToggle />
+			</div>
 		</aside>
 
     <!-- 主內容 -->
@@ -105,12 +136,17 @@ const navItems = [
         </div>
         <div class="nav-search-wrap">
           <Search posts={posts} />
+          <span class="search-hint" id="search-hint">按 <kbd>/</kbd> 搜尋</span>
         </div>
       </div>
 
       <slot />
     </main>
   </div>
+
+  <VisitorCount />
+  <BackToTop />
+  <div id="konami-toast" class="konami-toast" aria-live="polite" hidden>🎮 密技解鎖！</div>
 
   <script>
     function initMobileMenu() {
@@ -164,6 +200,57 @@ const navItems = [
 
     // Run on view transitions navigation
     document.addEventListener('astro:after-swap', initMobileMenu);
+
+    // 鍵盤快捷鍵：/ 聚焦搜尋、Esc 關閉選單
+    function isInputOrTextarea(el) {
+      if (!el) return false;
+      const tag = el.tagName?.toLowerCase();
+      return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '/' && !isInputOrTextarea(document.activeElement)) {
+        e.preventDefault();
+        document.getElementById('search-input')?.focus();
+      }
+      if (e.key === 'Escape') {
+        document.getElementById('sidebar')?.classList.remove('active');
+        document.getElementById('drawer-overlay')?.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Konami 密技 ↑↑↓↓←→←→BA
+    var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    var konamiIdx = 0;
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode === konami[konamiIdx]) {
+        konamiIdx++;
+        if (konamiIdx === konami.length) {
+          konamiIdx = 0;
+          var toast = document.getElementById('konami-toast');
+          if (toast) {
+            toast.removeAttribute('hidden');
+            toast.classList.add('show');
+            setTimeout(function() {
+              toast.classList.remove('show');
+              setTimeout(function() { toast.setAttribute('hidden', ''); }, 300);
+            }, 2000);
+          }
+        }
+      } else {
+        konamiIdx = 0;
+      }
+    });
   </script>
+  <style is:global>
+    .sidebar-extra { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: center; }
+    .search-hint { font-size: 11px; color: var(--text-dim); margin-left: 8px; white-space: nowrap; }
+    .search-hint kbd { padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); font-size: 11px; }
+    @media (max-width: 768px) { .search-hint { display: none; } }
+    .mobile-header-actions { display: flex; align-items: center; gap: 8px; }
+    .konami-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 600; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .konami-toast.show { opacity: 1; }
+  </style>
 </body>
 </html>

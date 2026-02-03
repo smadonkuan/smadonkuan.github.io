@@ -1,0 +1,53 @@
+---
+/**
+ * Giscus 留言（需先在 GitHub 啟用 Discussions）
+ * 設定方式：在專案根目錄建 .env 或 .env.production，加入：
+ *   PUBLIC_GISCUS_REPO=smadonkuan/smadonkuan.github.io
+ *   PUBLIC_GISCUS_REPO_ID=你的 repo ID（到 https://giscus.app/zh-TW 取得）
+ *   PUBLIC_GISCUS_CATEGORY=Announcements
+ *   PUBLIC_GISCUS_CATEGORY_ID=你的 category ID
+ */
+const repo = import.meta.env.PUBLIC_GISCUS_REPO ?? '';
+const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID ?? '';
+const category = import.meta.env.PUBLIC_GISCUS_CATEGORY ?? 'Announcements';
+const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID ?? '';
+const theme = import.meta.env.PUBLIC_GISCUS_THEME ?? 'light';
+const enabled = repo && repoId && categoryId;
+---
+
+{enabled && (
+  <section class="giscus-section" aria-label="留言區">
+    <h3 class="giscus-heading">留言</h3>
+    <div
+      class="giscus"
+      data-repo={repo}
+      data-repo-id={repoId}
+      data-category={category}
+      data-category-id={categoryId}
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme={theme}
+      data-lang="zh-TW"
+      data-loading="lazy"
+    />
+    <script src="https://giscus.app/client.js" async />
+  </section>
+)}
+
+<style>
+  .giscus-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+  }
+  .giscus-heading {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>

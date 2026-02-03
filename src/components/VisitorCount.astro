@@ -1,0 +1,38 @@
+---
+const visitorCount = 87; // 自行修改數字，改完 commit 到 git 就會更新
+---
+
+<div class="visitor-count" aria-hidden="true">
+  <span class="visitor-number">{visitorCount.toLocaleString('zh-TW')}</span>
+  <span class="visitor-label">人瀏覽過</span>
+</div>
+
+<style>
+  .visitor-count {
+    position: fixed;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    z-index: 100;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #666;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .visitor-number {
+    font-weight: 600;
+    color: #1A3A52;
+  }
+
+  .visitor-label {
+    color: #999;
+  }
+</style>

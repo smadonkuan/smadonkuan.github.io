@@ -65,7 +65,7 @@ const serializablePosts = posts.map(post => ({
       if (filteredPosts.length > 0) {
         resultsContainer.style.display = 'block';
         resultsContainer.innerHTML = filteredPosts.map(post => `
-          <a href="/blog/${post.slug}" class="search-result-item">
+          <a href="/posts/${post.slug}" class="search-result-item">
             <div class="result-title">${post.data.title}</div>
             <div class="result-date">${(() => {
               const d = new Date(post.data.date);
@@ -115,7 +115,7 @@ const serializablePosts = posts.map(post => ({
 
   input {
     width: 100%;
-    padding: 8px 12px 8px 32px;
+    padding: 10px 12px 10px 32px;
     border: 1px solid #e0e0e0;
     border-radius: 20px;
     font-size: 13px;
@@ -123,6 +123,24 @@ const serializablePosts = posts.map(post => ({
     transition: all 0.3s;
     outline: none;
     background: #f8f9fa;
+  }
+
+  /* 手機：至少 16px 避免 iOS 點擊輸入框自動放大 */
+  @media (max-width: 768px) {
+    .search-compact {
+      width: 100%;
+      max-width: 100%;
+    }
+    input {
+      font-size: 16px;
+      min-height: 44px;
+    }
+    .search-results {
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-height: 60vh;
+    }
   }
 
   input:focus {

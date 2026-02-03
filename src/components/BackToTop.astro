@@ -1,0 +1,51 @@
+---
+/** 回到頂部按鈕：捲動超過 400px 時顯示，點擊平滑滾回頂部。無 API。 */
+---
+<button type="button" id="back-to-top" class="back-to-top" aria-label="回到頂部" style="display: none;">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M18 15l-6-6-6 6"/>
+  </svg>
+</button>
+
+<script>
+  (function () {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    function toggle() {
+      btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+    }
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.addEventListener('astro:page-load', toggle);
+  })();
+</script>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    right: calc(20px + env(safe-area-inset-right, 0px));
+    z-index: 99;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .back-to-top:hover {
+    border-color: #E8714C;
+    color: #E8714C;
+    transform: translateY(-2px);
+  }
+</style>

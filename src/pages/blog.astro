@@ -2,9 +2,12 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = await getCollection('posts');
-// 排序邏輯：新的在前 (假設日期格式 YYYY年 MM月 DD日 可簡單字串排序，或是保持原順序)
-// 這裡暫時保持原順序
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -18,6 +21,23 @@ function formatDate(dateStr: string) {
 <MainLayout title="Blog - 呂依璇 Elaine Lu" currentPath="/blog">
     <div class="post">
         <h1 class="section-title">所有文章</h1>
+
+        <div class="blog-actions">
+          <!-- RSS 先註解
+          <span class="rss-link">
+            <a href="/rss.xml" class="rss-btn" title="訂閱 RSS">📡 訂閱 RSS</a>
+          </span>
+          -->
+          <a href="/blog/archive" class="archive-link" title="依年／月彙整">依年／月彙整</a>
+          {allTags.length > 0 && (
+            <div class="tag-cloud">
+              <span class="tag-cloud-label">標籤：</span>
+              {allTags.map((tag) => (
+                <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tech-badge tag-link">{tag}</a>
+              ))}
+            </div>
+          )}
+        </div>
         
         <div id="posts-container">
             {posts.length === 0 ? (
@@ -31,7 +51,9 @@ function formatDate(dateStr: string) {
                         </div>
                         <p>{post.data.excerpt}</p>
                         <div class="tech-stack">
-                            {post.data.tags.map((tag: unknown) => <span class="tech-badge">{tag}</span>)}
+                            {post.data.tags.map((tag: string) => (
+                              <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tech-badge tag-link">{tag}</a>
+                            ))}
                         </div>
                         <a href={`/posts/${post.slug}`} class="btn">Read Article →</a>
                     </div>

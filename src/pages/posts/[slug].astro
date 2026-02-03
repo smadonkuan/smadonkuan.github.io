@@ -2,6 +2,11 @@
 import { getCollection } from 'astro:content';
 import MainLayout from '../../layouts/MainLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import PrevNextNav from '../../components/PrevNextNav.astro';
+import ReadingProgress from '../../components/ReadingProgress.astro';
+import CodeCopy from '../../components/CodeCopy.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -13,28 +18,91 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
+const canonicalUrl = new URL(`/posts/${post.slug}`, Astro.url.origin).href;
+
+// 自動估算閱讀時間（約 200 字/分鐘）
+function getReadTime(post: typeof post): string {
+  if (post.data.readTime) return post.data.readTime;
+  const body = post.body ?? '';
+  const wordCount = body.split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.round(wordCount / 200));
+  return `${mins} min read`;
+}
+const readTime = getReadTime(post);
+
+// 依日期排序，取得上一篇／下一篇
+const sorted = (await getCollection('posts'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+const idx = sorted.findIndex((p) => p.slug === post.slug);
+const prevPost = idx > 0 ? sorted[idx - 1] : null;
+const nextPost = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+// 同系列上一篇／下一篇（若有 series）
+const seriesName = post.data.series ?? null;
+let seriesPrev: { slug: string; title: string } | null = null;
+let seriesNext: { slug: string; title: string } | null = null;
+if (seriesName) {
+  const inSeries = sorted.filter((p) => p.data.series === seriesName);
+  const si = inSeries.findIndex((p) => p.slug === post.slug);
+  if (si > 0) seriesPrev = { slug: inSeries[si - 1].slug, title: inSeries[si - 1].data.title };
+  if (si >= 0 && si < inSeries.length - 1) seriesNext = { slug: inSeries[si + 1].slug, title: inSeries[si + 1].data.title };
+}
+
+// JSON-LD Article schema
+const siteUrl = import.meta.env.SITE ?? 'https://smadonkuan.github.io';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.excerpt,
+  datePublished: post.data.date,
+  author: { '@type': 'Person', name: '呂依璇 Elaine Lu' },
+  publisher: { '@type': 'Organization', name: '呂依璇 Elaine Lu', logo: { '@type': 'ImageObject', url: new URL('/elaine.png', siteUrl).href } },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+};
 ---
 
-<MainLayout title={`${post.data.title} - 呂依璇 Elaine Lu`} currentPath="/blog">
+<MainLayout
+  title={`${post.data.title} - 呂依璇 Elaine Lu`}
+  currentPath="/blog"
+  description={post.data.excerpt}
+  canonicalUrl={canonicalUrl}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <ReadingProgress />
   <div class="post-container">
     <article class="post">
       <div class="post-header">
         <h1>{post.data.title}</h1>
+        {seriesName && <p class="post-series">系列：{seriesName}</p>}
         <div class="post-meta">
           <span class="date">{post.data.date}</span>
           <span class="separator"> • </span>
-          <span class="read-time">{post.data.readTime}</span>
+          <span class="read-time">{readTime}</span>
         </div>
         <div class="tags">
-          {post.data.tags.map((tag: unknown) => <span class="tag">{tag}</span>)}
+          {post.data.tags.map((tag: string) => (
+            <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tag">{tag}</a>
+          ))}
         </div>
+        <ShareButtons title={post.data.title} url={canonicalUrl} />
       </div>
       
       <div class="post-body">
         <Content />
       </div>
+      <CodeCopy />
 
       <div class="post-footer">
+        <RelatedPosts currentSlug={post.slug} tags={post.data.tags} />
+        <PrevNextNav
+          prev={prevPost ? { slug: prevPost.slug, title: prevPost.data.title } : null}
+          next={nextPost ? { slug: nextPost.slug, title: nextPost.data.title } : null}
+          seriesName={seriesName}
+          seriesPrev={seriesPrev}
+          seriesNext={seriesNext}
+        />
         <a href="/blog" class="back-link">← 返回文章列表</a>
       </div>
     </article>

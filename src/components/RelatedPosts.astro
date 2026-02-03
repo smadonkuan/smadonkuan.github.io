@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  tags: string[];
+  limit?: number;
+}
+
+const { currentSlug, tags, limit = 3 } = Astro.props;
+
+if (tags.length === 0) {
+  return null;
+}
+
+const allPosts = await getCollection('posts');
+const related = allPosts
+  .filter((p) => p.slug !== currentSlug && !p.data.draft)
+  .map((p) => ({
+    post: p,
+    score: p.data.tags.filter((t: string) => tags.includes(t)).length,
+  }))
+  .filter((r) => r.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit)
+  .map((r) => r.post);
+
+if (related.length === 0) return null;
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, '0')}月${String(date.getDate()).padStart(2, '0')}日`;
+}
+---
+
+<section class="related-posts" aria-label="相關文章">
+  <h3>相關文章</h3>
+  <ul>
+    {related.map((post) => (
+      <li>
+        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+        <span class="related-meta">{formatDate(post.data.date)}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .related-posts {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+  }
+  .related-posts h3 {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .related-posts ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .related-posts li {
+    margin-bottom: 0.75rem;
+  }
+  .related-posts a {
+    color: #1A3A52;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .related-posts a:hover {
+    color: #E8714C;
+  }
+  .related-meta {
+    display: block;
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.2rem;
+  }
+</style>

@@ -32,10 +32,10 @@ function formatDate(dateStr: string) {
 
 <MainLayout title={`標籤：${decodedTag} - 呂依璇 Elaine Lu`} currentPath="/blog">
   <div class="post">
-    <h1 class="section-title">標籤：{decodedTag}</h1>
-    <p class="tag-desc">
-      <a href="/blog" class="back-link">← 返回全部文章</a>
-    </p>
+    <div class="tag-header">
+      <h1 class="section-title">標籤：{decodedTag}</h1>
+      <a href="/blog" class="back-to-blog">返回全部文章</a>
+    </div>
     <div id="posts-container">
       {posts.length === 0 ? (
         <p style="text-align: center; color: #999;">此標籤下尚無文章</p>
@@ -61,13 +61,60 @@ function formatDate(dateStr: string) {
 </MainLayout>
 
 <style>
-  .tag-desc {
+  .tag-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     margin-bottom: 1.5rem;
-    color: #666;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .tag-header .section-title {
+    margin-bottom: 0 !important;
+    flex: 1;
+    min-width: 0;
+  }
+  .back-to-blog {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    transition: all 0.2s;
+    background: transparent;
+    white-space: nowrap;
+  }
+  .back-to-blog:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(232, 113, 76, 0.25);
+  }
+  .back-to-blog::before {
+    content: '←';
+    margin-right: 2px;
   }
   .tag-link.active {
     background: #E8714C;
     color: white;
     border-color: #E8714C;
+  }
+  @media (max-width: 768px) {
+    .tag-header {
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .tag-header .section-title {
+      font-size: 20px;
+    }
+    .back-to-blog {
+      font-size: 13px;
+      padding: 5px 12px;
+    }
   }
 </style>

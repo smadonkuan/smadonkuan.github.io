@@ -24,14 +24,16 @@ const monthNames: Record<string, string> = {
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
-  return `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
+  return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
 }
 ---
 
 <MainLayout title="文章彙整 - 呂依璇 Elaine Lu" currentPath="/blog">
   <div class="post">
-    <h1 class="section-title">文章彙整</h1>
-    <p class="archive-desc"><a href="/blog">← 返回全部文章</a></p>
+    <div class="archive-header">
+      <h1 class="section-title">文章彙整</h1>
+      <a href="/blog" class="back-to-blog">返回全部文章</a>
+    </div>
     {years.length === 0 ? (
       <p class="archive-empty">尚無文章</p>
     ) : (
@@ -46,9 +48,9 @@ function formatDate(dateStr: string) {
                   <h3 class="archive-month-title">{monthNames[month] || month}</h3>
                   <ul class="archive-posts">
                     {posts.map((post) => (
-                      <li>
-                        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+                      <li class="archive-post-item">
                         <span class="archive-date">{formatDate(post.data.date)}</span>
+                        <a href={`/posts/${post.slug}`} class="archive-post-link">{post.data.title}</a>
                       </li>
                     ))}
                   </ul>
@@ -62,53 +64,143 @@ function formatDate(dateStr: string) {
 </MainLayout>
 
 <style>
-  .archive-desc {
+  .archive-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     margin-bottom: 2rem;
-    color: #666;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .archive-header .section-title {
+    margin-bottom: 0 !important;
+    flex: 1;
+    min-width: 0;
+  }
+  .back-to-blog {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    transition: all 0.2s;
+    background: transparent;
+    white-space: nowrap;
+  }
+  .back-to-blog:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(232, 113, 76, 0.25);
+  }
+  .back-to-blog::before {
+    content: '←';
+    margin-right: 2px;
+  }
+  @media (max-width: 768px) {
+    .archive-header {
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .archive-header .section-title {
+      font-size: 20px;
+    }
+    .back-to-blog {
+      font-size: 13px;
+      padding: 5px 12px;
+    }
   }
   .archive-empty {
     text-align: center;
     color: #999;
+    padding: 3rem 0;
+  }
+  .archive-list {
+    max-width: 100%;
   }
   .archive-year {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
   .archive-year-title {
-    font-size: 1.35rem;
-    color: #1A3A52;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #E8714C;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent);
   }
   .archive-month {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    margin-left: 0;
   }
   .archive-month-title {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
   }
   .archive-posts {
     list-style: none;
     padding: 0;
     margin: 0;
+    padding-left: 1rem;
   }
-  .archive-posts li {
+  .archive-post-item {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
   }
-  .archive-posts a {
-    color: #1A3A52;
-    text-decoration: none;
-  }
-  .archive-posts a:hover {
-    color: #E8714C;
+  .archive-post-item:last-child {
+    border-bottom: none;
   }
   .archive-date {
-    font-size: 0.85rem;
-    color: #999;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    min-width: 50px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .archive-post-link {
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.5;
+    flex: 1;
+    transition: color 0.2s;
+  }
+  .archive-post-link:hover {
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    .archive-year {
+      margin-bottom: 2rem;
+    }
+    .archive-year-title {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .archive-month-title {
+      font-size: 1rem;
+    }
+    .archive-posts {
+      padding-left: 0.5rem;
+    }
+    .archive-post-item {
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem 0;
+    }
+    .archive-date {
+      font-size: 0.8rem;
+    }
   }
 </style>

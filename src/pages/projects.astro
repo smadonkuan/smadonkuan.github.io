@@ -7,22 +7,24 @@ const { repos, error } = await getGithubRepos();
 ---
 
 <MainLayout title="Projects - 呂依璇 Elaine Lu" currentPath="/projects">
-    <h2 class="section-title">所有專案</h2>
-    <div id="projects-container">
-        {error && (
-             <p style="text-align: center; color: #E8714C; font-size: 14px; margin-bottom: 20px;">
-                ⚠️ 使用 Demo 資料 ({error})
-             </p>
-        )}
-        {repos.length === 0 ? (
-            <p style="text-align: center; color: #999;">目前沒有專案</p>
-        ) : (
-            <div class="projects-grid">
-                {repos.map(repo => (
-                    <ProjectCard repo={repo} />
-                ))}
-            </div>
-        )}
+    <div class="page">
+        <h2 class="section-title">所有專案</h2>
+        <div id="projects-container">
+            {error && (
+                 <p style="text-align: center; color: #E8714C; font-size: 14px; margin-bottom: 20px;">
+                    ⚠️ 使用 Demo 資料 ({error})
+                 </p>
+            )}
+            {repos.length === 0 ? (
+                <p style="text-align: center; color: #999;">目前沒有專案</p>
+            ) : (
+                <div class="projects-grid">
+                    {repos.map(repo => (
+                        <ProjectCard repo={repo} />
+                    ))}
+                </div>
+            )}
+        </div>
     </div>
 </MainLayout>
 

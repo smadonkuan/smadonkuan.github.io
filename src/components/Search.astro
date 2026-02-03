@@ -28,6 +28,9 @@ const serializablePosts = posts.map(post => ({
       placeholder="Search..."
       autocomplete="off"
     >
+    <span class="search-hint-inline" id="search-hint-inline">
+      <span class="search-hint-text"></span>
+    </span>
   </div>
   
   <div id="search-results" class="search-results" style="display: none;"></div>
@@ -88,6 +91,68 @@ const serializablePosts = posts.map(post => ({
         resultsContainer.style.display = 'block';
       }
     });
+
+    // Show/hide inline hint based on input value and focus
+    const hintInline = document.getElementById('search-hint-inline');
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobile = window.innerWidth <= 768;
+    
+    function updateHintVisibility() {
+      if (!hintInline) return;
+
+      if (!isTouchDevice && !isMobile) {
+        // 桌面版：只要沒有 focus，就顯示提示（不管有沒有輸入過）
+        if (document.activeElement !== searchInput) {
+          hintInline.style.display = 'flex';
+        } else {
+          hintInline.style.display = 'none';
+        }
+      } else {
+        // 手機版永遠隱藏
+        hintInline.style.display = 'none';
+      }
+    }
+    
+    searchInput.addEventListener('input', updateHintVisibility);
+    searchInput.addEventListener('focus', () => {
+      if (hintInline) hintInline.style.display = 'none';
+    });
+    searchInput.addEventListener('blur', updateHintVisibility);
+    
+    // 視窗大小改變時重新檢查
+    window.addEventListener('resize', () => {
+      updateHintVisibility();
+      // 重新設定提示文字（如果從手機切換到桌面）
+      const hintText = document.querySelector('.search-hint-text');
+      if (hintText && window.innerWidth > 768) {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        hintText.innerHTML = isMac 
+          ? '按 <kbd>⌘</kbd><kbd>K</kbd> 搜尋'
+          : '按 <kbd>Ctrl</kbd><kbd>K</kbd> 搜尋';
+      }
+    });
+    
+    // Initial state
+    updateHintVisibility();
+    
+    // 根據作業系統和裝置類型顯示正確的快捷鍵提示
+    const hintText = document.querySelector('.search-hint-text');
+    if (hintText) {
+      // 偵測是否為觸控裝置（手機/平板）
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isMobile = window.innerWidth <= 768;
+      
+      if (isTouchDevice || isMobile) {
+        // 手機/平板：隱藏快捷鍵提示（因為沒有鍵盤）
+        if (hintInline) hintInline.style.display = 'none';
+      } else {
+        // 桌面：顯示快捷鍵提示
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        hintText.innerHTML = isMac 
+          ? '按 <kbd>⌘</kbd><kbd>K</kbd> 搜尋'
+          : '按 <kbd>Ctrl</kbd><kbd>K</kbd> 搜尋';
+      }
+    }
   }
 </script>
 
@@ -115,7 +180,7 @@ const serializablePosts = posts.map(post => ({
 
   input {
     width: 100%;
-    padding: 10px 12px 10px 32px;
+    padding: 10px 80px 10px 32px;
     border: 1px solid #e0e0e0;
     border-radius: 20px;
     font-size: 13px;
@@ -123,6 +188,37 @@ const serializablePosts = posts.map(post => ({
     transition: all 0.3s;
     outline: none;
     background: #f8f9fa;
+  }
+  
+  .search-hint-inline {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  
+  .search-hint-inline kbd {
+    padding: 2px 5px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    margin: 0 1px;
+  }
+  
+  .search-hint-text {
+    display: flex;
+    align-items: center;
+    gap: 2px;
   }
 
   /* 手機：至少 16px 避免 iOS 點擊輸入框自動放大 */
@@ -134,6 +230,10 @@ const serializablePosts = posts.map(post => ({
     input {
       font-size: 16px;
       min-height: 44px;
+      padding-right: 12px; /* 手機版不需要為提示留空間 */
+    }
+    .search-hint-inline {
+      display: none !important; /* 手機版隱藏快捷鍵提示 */
     }
     .search-results {
       left: 0;

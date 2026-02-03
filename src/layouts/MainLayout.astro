@@ -136,7 +136,6 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
         </div>
         <div class="nav-search-wrap">
           <Search posts={posts} />
-          <span class="search-hint" id="search-hint">按 <kbd>/</kbd> 搜尋</span>
         </div>
       </div>
 
@@ -208,7 +207,15 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
       return tag === 'input' || tag === 'textarea' || el.isContentEditable;
     }
     document.addEventListener('keydown', function(e) {
-      if (e.key === '/' && !isInputOrTextarea(document.activeElement)) {
+      // Cmd/Ctrl + K 或 Cmd/Ctrl + / 來觸發搜尋
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K' || e.key === '/')) {
+        if (!isInputOrTextarea(document.activeElement)) {
+          e.preventDefault();
+          document.getElementById('search-input')?.focus();
+        }
+      }
+      // 單獨按 / 也可以（如果不在輸入框中）
+      if (e.key === '/' && !isInputOrTextarea(document.activeElement) && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         document.getElementById('search-input')?.focus();
       }
@@ -245,9 +252,6 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
   </script>
   <style is:global>
     .sidebar-extra { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: center; }
-    .search-hint { font-size: 11px; color: var(--text-dim); margin-left: 8px; white-space: nowrap; }
-    .search-hint kbd { padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); font-size: 11px; }
-    @media (max-width: 768px) { .search-hint { display: none; } }
     .mobile-header-actions { display: flex; align-items: center; gap: 8px; }
     .konami-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 600; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .konami-toast.show { opacity: 1; }

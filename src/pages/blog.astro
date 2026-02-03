@@ -19,25 +19,20 @@ function formatDate(dateStr: string) {
 ---
 
 <MainLayout title="Blog - 呂依璇 Elaine Lu" currentPath="/blog">
-    <div class="post">
-        <h1 class="section-title">所有文章</h1>
-
-        <div class="blog-actions">
-          <!-- RSS 先註解
-          <span class="rss-link">
-            <a href="/rss.xml" class="rss-btn" title="訂閱 RSS">📡 訂閱 RSS</a>
-          </span>
-          -->
+    <div class="page post post-list">
+        <div class="blog-header">
+          <h1 class="section-title">所有文章</h1>
           <a href="/blog/archive" class="archive-link" title="依年／月彙整">依年／月彙整</a>
-          {allTags.length > 0 && (
-            <div class="tag-cloud">
-              <span class="tag-cloud-label">標籤：</span>
-              {allTags.map((tag) => (
-                <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tech-badge tag-link">{tag}</a>
-              ))}
-            </div>
-          )}
         </div>
+
+        {allTags.length > 0 && (
+          <div class="tag-cloud">
+            <span class="tag-cloud-label">標籤：</span>
+            {allTags.map((tag) => (
+              <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tech-badge tag-link">{tag}</a>
+            ))}
+          </div>
+        )}
         
         <div id="posts-container">
             {posts.length === 0 ? (

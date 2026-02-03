@@ -235,9 +235,9 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
+    padding-bottom: 12px;
 }
 
 .nav-links {
@@ -266,7 +266,7 @@ main {
 .nav-tab.active::after {
     content: '';
     position: absolute;
-    bottom: -20px;
+    bottom: -8px;
     left: 0;
     width: 100%;
     height: 2px;
@@ -456,11 +456,17 @@ main {
     transform: translateY(-3px);
 }
 
-/* ===== 文章詳情頁樣式 ===== */
+/* ===== 文章 / 頁面主內容寬度 ===== */
+.page,
 .post {
     max-width: 900px;
     margin: 0 auto;
     padding: 40px 20px;
+}
+
+/* Blog 列表頁：上方留小一點空間就好 */
+.post.post-list {
+    padding-top: 10px;
 }
 
 .post-header {
@@ -519,21 +525,38 @@ main {
     color: white;
     border-color: #E8714C;
 }
-.blog-actions {
+.blog-header {
     display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
     flex-wrap: wrap;
-    align-items: center;
     gap: 1rem;
-    margin-bottom: 2rem;
+}
+.blog-header .section-title {
+    margin-bottom: 0 !important;
+    flex: 1;
+    min-width: 0;
 }
 .archive-link {
     font-size: 14px;
-    color: var(--text-muted);
+    font-weight: 500;
+    color: var(--accent);
     text-decoration: none;
-    transition: color 0.2s;
+    padding: 6px 14px;
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    transition: all 0.2s;
+    background: transparent;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1.5;
 }
 .archive-link:hover {
-    color: var(--accent);
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(232, 113, 76, 0.25);
 }
 .rss-link .rss-btn {
     font-size: 14px;
@@ -553,10 +576,11 @@ main {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
+    margin-bottom: 2rem;
 }
 .tag-cloud-label {
     font-size: 13px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .post-body {
@@ -854,7 +878,7 @@ main {
     }
 
     .nav-tab.active::after {
-        bottom: -16px;
+        bottom: -6px;
     }
 
     .nav-search-wrap {
@@ -915,6 +939,21 @@ main {
 @media (max-width: 768px) {
     .post {
         padding: 0 0 24px 0;
+    }
+    
+    .blog-header {
+        align-items: baseline;
+        gap: 0.75rem;
+    }
+    
+    .blog-header .section-title {
+        margin-bottom: 0 !important;
+        font-size: 20px;
+    }
+    
+    .archive-link {
+        font-size: 13px;
+        padding: 5px 12px;
     }
 
     .post-header h1 {

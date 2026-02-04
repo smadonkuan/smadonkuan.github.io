@@ -44,6 +44,7 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     transition: background 0.3s, color 0.3s;
+    overflow-x: hidden; /* 手機避免橫向捲動造成版面寬度感覺不一致 */
 }
 
 /* ===== 主容器布局 ===== */
@@ -845,6 +846,14 @@ main {
         min-height: 100dvh;
     }
 
+    /* 手機版 .page 不再加左右 padding，只由 main 提供 16px，避免雙重留白、內容寬度不一致 */
+    .page {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
     .nav-tabs {
         flex-direction: column;
         align-items: stretch;
@@ -922,7 +931,7 @@ main {
     }
 
     .cta-banner {
-        padding: 40px 20px;
+        padding: 40px 16px;
         margin: 32px 0;
     }
 

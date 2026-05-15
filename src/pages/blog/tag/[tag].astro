@@ -1,5 +1,5 @@
 ---
-import MainLayout from '../../../layouts/MainLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -30,7 +30,7 @@ function formatDate(dateStr: string) {
 }
 ---
 
-<MainLayout title={`標籤：${decodedTag} - 呂依璇 Elaine Lu`} currentPath="/blog">
+<LandingLayout title={`標籤：${decodedTag} - 呂依璇 Elaine Lu`} currentPath="/blog">
   <div class="post">
     <div class="tag-header">
       <h1 class="section-title">標籤：{decodedTag}</h1>
@@ -58,7 +58,7 @@ function formatDate(dateStr: string) {
       )}
     </div>
   </div>
-</MainLayout>
+</LandingLayout>
 
 <style>
   .tag-header {

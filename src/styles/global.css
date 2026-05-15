@@ -5,41 +5,46 @@
     box-sizing: border-box;
 }
 
-/* ===== 主題變數（淺色預設） ===== */
+/* ===== 主題變數（全站淺色預設） ===== */
 :root {
-    --bg: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-hover: #fff9f7;
-    --text: #000000;
-    --text-muted: #666;
-    --text-dim: #999;
-    --border: #e0e0e0;
-    --border-color: #e0e0e0;
+    --bg: #f5f5f3;
+    --bg-secondary: #ffffff;
+    --bg-hover: #ececea;
+    --text: #111827;
+    --text-muted: #374151;
+    --text-dim: #6b7280;
+    --border: #d6d3d1;
+    --border-color: #d6d3d1;
     --accent: #E8714C;
     --accent-hover: #D45A38;
-    --card-bg: #fff;
-    --shadow: rgba(0,0,0,0.06);
+    --card-bg: #ffffff;
+    --shadow: rgba(0,0,0,0.08);
+}
+
+::selection {
+    background: rgba(96, 165, 250, 0.22);
+    color: #111827;
 }
 
 [data-theme="dark"] {
-    --bg: #1a1a1a;
-    --bg-secondary: #252525;
-    --bg-hover: #333;
-    --text: #e4e4e4;
-    --text-muted: #b0b0b0;
-    --text-dim: #888;
-    --border: #333;
-    --border-color: #333;
+    --bg: #282725;
+    --bg-secondary: #32302e;
+    --bg-hover: #3a3836;
+    --text: #f6f6f6;
+    --text-muted: #c4c4c4;
+    --text-dim: #9a9a9a;
+    --border: #4a4743;
+    --border-color: #4a4743;
     --accent: #f08a6e;
     --accent-hover: #E8714C;
-    --card-bg: #252525;
+    --card-bg: #32302e;
     --shadow: rgba(0,0,0,0.3);
 }
 
 /* ===== 主體樣式 ===== */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-    background: var(--bg);
+    background: linear-gradient(to bottom, #f5f5f3, #ececea);
     color: var(--text);
     line-height: 1.6;
     min-height: 100vh;
@@ -73,12 +78,10 @@ aside {
     overflow-y: auto;
 }
 
-/* ===== 個人資訊區塊 ===== */
 .profile {
     text-align: center;
 }
 
-/* ===== 頭像圓形 ===== */
 /* ===== 頭像圓形 ===== */
 .avatar {
     width: 120px;
@@ -86,15 +89,11 @@ aside {
     margin: 0 auto 30px;
     border-radius: 50%;
     display: block;
-    /* Changed from flex to block for img */
     object-fit: cover;
-    /* Ensure image covers the circle */
     box-shadow: 0 0 20px rgba(26, 58, 82, 0.2);
     border: 4px solid white;
-    /* Optional: adds a nice border */
 }
 
-/* ===== 名字標題 ===== */
 .profile h1 {
     font-size: 22px;
     font-weight: 700;
@@ -102,7 +101,6 @@ aside {
     color: var(--text);
 }
 
-/* ===== 職位標籤 ===== */
 .profile .title {
     color: var(--accent);
     font-size: 13px;
@@ -111,7 +109,6 @@ aside {
     text-transform: uppercase;
 }
 
-/* ===== 自我介紹文字 ===== */
 .bio {
     font-size: 13px;
     line-height: 1.8;
@@ -121,7 +118,6 @@ aside {
     padding-bottom: 30px;
 }
 
-/* ===== 統計數據區 ===== */
 .stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -129,7 +125,6 @@ aside {
     margin-bottom: 40px;
 }
 
-/* ===== 單個統計項目 ===== */
 .stat-item {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -227,7 +222,7 @@ aside {
 /* ===== 主內容區域 ===== */
 main {
     padding: 40px 40px;
-    background: var(--bg);
+    background: transparent;
     transition: background 0.3s;
 }
 
@@ -472,14 +467,14 @@ main {
 
 .post-header {
     margin-bottom: 40px;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid var(--border);
     padding-bottom: 20px;
 }
 
 .post-header h1 {
     font-size: 2.5rem;
     margin-bottom: 15px;
-    color: #000;
+    color: var(--text);
 }
 
 .post-series {
@@ -492,20 +487,25 @@ main {
     display: flex;
     gap: 10px;
     font-size: 14px;
-    color: #999;
+    color: var(--text-dim);
     margin-bottom: 15px;
 }
 
 .tags {
     display: flex;
-    gap: 10px;
+    gap: 14px;
     flex-wrap: wrap;
     margin-top: 15px;
 }
 
+/* Add breathing room between tags and share buttons in post header */
+.post-header .tags {
+    margin-bottom: 14px;
+}
+
 .tag,
 .post-header .tags a.tag {
-    background: #f0f4ff;
+    background: var(--bg-secondary);
     color: #E8714C;
     padding: 4px 12px;
     border-radius: 20px;
@@ -587,12 +587,12 @@ main {
 .post-body {
     font-size: 16px;
     line-height: 1.8;
-    color: #333;
+    color: var(--text-muted);
 }
 
 /* Markdown 程式碼區塊美化（Maple Mono） */
 .post-body code {
-    background: #f0f0f0;
+    background: var(--bg-secondary);
     padding: 2px 6px;
     border-radius: 4px;
     font-family: 'Maple Mono', monospace;
@@ -601,7 +601,7 @@ main {
 }
 
 .post-body pre {
-    background: #f5f5f5;
+    background: var(--bg-secondary);
     border-left: 4px solid #E8714C;
     padding: 15px 20px;
     border-radius: 6px;
@@ -609,7 +609,7 @@ main {
     font-family: 'Maple Mono', monospace;
     font-size: 15px;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-muted);
     margin: 20px 0;
 }
 
@@ -622,7 +622,7 @@ main {
 .post-body h2 {
     font-size: 1.8rem;
     margin: 30px 0 15px 0;
-    color: #1A3A52;
+    color: var(--text);
     border-left: 4px solid #E8714C;
     padding-left: 15px;
 }
@@ -652,7 +652,7 @@ main {
 .post-body h3 {
     font-size: 1.3rem;
     margin: 20px 0 10px 0;
-    color: #333;
+    color: var(--text);
 }
 
 .post-body p {
@@ -672,7 +672,7 @@ main {
     border-left: 4px solid #E8714C;
     padding-left: 15px;
     margin-left: 0;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
 }
 
@@ -684,20 +684,20 @@ main {
 
 .post-body th,
 .post-body td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 1px solid var(--border);
+    padding: 12px 16px;
     text-align: left;
 }
 
 .post-body th {
-    background: #f5f5f5;
+    background: var(--bg-secondary);
     font-weight: bold;
 }
 
 .post-footer {
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid var(--border);
 }
 
 .back-link {
@@ -729,10 +729,8 @@ main {
         padding-left: calc(20px + env(safe-area-inset-left, 0px));
         padding-right: calc(20px + env(safe-area-inset-right, 0px));
         padding-top: calc(10px + env(safe-area-inset-top, 0px));
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid #e0e0e0;
+        background: #f5f5f3;
+        border-bottom: 1px solid var(--border);
         position: fixed;
         top: 0;
         left: 0;
@@ -747,7 +745,7 @@ main {
         align-items: center;
         gap: 12px;
         text-decoration: none;
-        color: #000;
+        color: var(--text);
         min-height: 44px;
         align-items: center;
     }
@@ -757,14 +755,14 @@ main {
         height: 36px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid white;
+        border: 2px solid var(--border);
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .mobile-name {
         font-weight: 700;
         font-size: 16px;
-        color: #1A3A52;
+        color: var(--text);
     }
 
     /* 觸控目標至少 44x44px（WCAG） */
@@ -772,7 +770,7 @@ main {
         background: none;
         border: none;
         font-size: 24px;
-        color: #1A3A52;
+        color: var(--text);
         cursor: pointer;
         min-width: 44px;
         min-height: 44px;
@@ -797,7 +795,7 @@ main {
         height: 100vh;
         height: 100dvh;
         z-index: 1002;
-        background: #ffffff;
+        background: var(--bg-secondary);
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 4px 0 24px rgba(0,0,0,0.1);
@@ -1112,3 +1110,38 @@ main {
 [data-theme="dark"] .featured-column h2 { color: var(--text); }
 [data-theme="dark"] .terminal-line { color: var(--text-dim); }
 [data-theme="dark"] .terminal-output { color: var(--accent); }
+
+/* ===== Scroll Reveal Animations ===== */
+.reveal {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.reveal-up {
+    transform: translateY(30px);
+}
+
+.reveal-down {
+    transform: translateY(-30px);
+}
+
+.reveal-left {
+    transform: translateX(-30px);
+}
+
+.reveal-right {
+    transform: translateX(30px);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* 延遲顯示效果 */
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }

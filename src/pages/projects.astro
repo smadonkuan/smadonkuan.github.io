@@ -1,12 +1,12 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import LandingLayout from '../layouts/LandingLayout.astro';
 import { getGithubRepos } from '../utils/github';
 import ProjectCard from '../components/ProjectCard.astro';
 
 const { repos, error } = await getGithubRepos();
 ---
 
-<MainLayout title="Projects - 呂依璇 Elaine Lu" currentPath="/projects">
+<LandingLayout title="Projects - 呂依璇 Elaine Lu" currentPath="/projects">
     <div class="page">
         <h2 class="section-title">所有專案</h2>
         <div id="projects-container">
@@ -19,14 +19,14 @@ const { repos, error } = await getGithubRepos();
                 <p style="text-align: center; color: #999;">目前沒有專案</p>
             ) : (
                 <div class="projects-grid">
-                    {repos.map(repo => (
-                        <ProjectCard repo={repo} />
+                    {repos.map((repo, index) => (
+                        <ProjectCard repo={repo} class={`reveal-delay-${(index % 5) + 1}`} />
                     ))}
                 </div>
             )}
         </div>
     </div>
-</MainLayout>
+</LandingLayout>
 
 <style>
     .projects-grid {

@@ -1,0 +1,607 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+---
+
+<LandingLayout
+  title="Resume - Elaine Lu"
+  description="Resume of Elaine Lu."
+>
+  <section class="resume-page">
+    <div class="resume-actions no-print">
+      <a href="/about" class="resume-action-link">Back to About</a>
+      <button type="button" class="resume-download-btn" id="lang-toggle-btn">English</button>
+      <button type="button" class="resume-download-btn" id="download-pdf-en-btn">Download English PDF</button>
+      <button type="button" class="resume-download-btn" id="download-pdf-zh-btn">下載中文 PDF</button>
+    </div>
+
+    <div id="resume-content-zh" class="resume-content">
+      <header class="resume-header">
+        <h1>呂依璇 Elaine Lu</h1>
+        <p class="headline">輔仁大學 人工智慧與資訊安全學士學位學程</p>
+        <p class="contact-line">
+          台灣 | <a href="mailto:elainelu0813@gmail.com">elainelu0813@gmail.com</a> |
+          <a href="https://github.com/smadonkuan" target="_blank" rel="noopener noreferrer">GitHub</a> |
+          <a href="https://www.linkedin.com/in/elaine-lu-115952392/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </p>
+      </header>
+
+      <section class="resume-section">
+        <h2>個人摘要</h2>
+        <p>
+          主要記錄 Active Directory、企業內網與攻擊模擬相關研究，
+          也會整理實作過程、技術筆記與一些安全測試心得。
+        </p>
+      </section>
+
+      <section class="resume-section">
+        <h2>工作經歷</h2>
+        <ul>
+          <li>Python 資安自動化工具開發</li>
+          <li>BAS 攻擊劇本撰寫與攻擊模擬</li>
+          <li>Windows／AD 測試環境建置與攻擊驗證</li>
+          <li>EDR 架設、部署與防護驗證</li>
+          <li>攻擊 PoC 與測試流程開發</li>
+          <li>技術文件與測試報告撰寫</li>
+          <li>實習生技術指導與測試流程協作</li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>核心技能</h2>
+        <ul>
+          <li>資安領域：Windows Active Directory Security、DNS Security、威脅分析、Red Teaming 基礎</li>
+          <li>程式語言：Python、Java、PHP、JavaScript</li>
+          <li>系統與網路：Linux、TCP/IP、子網切割、基礎系統強化</li>
+          <li>工作方式：技術研究、文件化整理、可重現的安全筆記</li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>代表研究與專案</h2>
+        <ul>
+          <li>
+            <strong>Active Directory Attack Lab</strong><br />
+            建立 Windows AD 測試環境，模擬權限提升、橫向移動與常見內網攻擊流程。
+          </li>
+          <li>
+            <strong>DNS Spoofing &amp; Kerberos Research</strong><br />
+            研究 DNS Spoofing 與 Kerberos 濫用路徑，整理身份驗證相關攻擊流程與防禦方式。
+          </li>
+          <li>
+            <strong>Conpot Honeypot Research</strong><br />
+            建置工控 honeypot 環境，觀察 ICS/SCADA 協定的掃描與互動行為。
+          </li>
+          <li>
+            <strong>Security Automation</strong><br />
+            使用 Python 撰寫安全測試、資料整理與分析自動化工具。
+          </li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>語言能力</h2>
+        <ul>
+          <li>中文：母語</li>
+          <li>英文：工作溝通能力</li>
+        </ul>
+      </section>
+    </div>
+
+    <div id="resume-content-en" class="resume-content" hidden>
+      <header class="resume-header">
+        <h1>Elaine Lu</h1>
+        <p class="headline">Program in Artificial Intelligence and Information Security, Fu Jen Catholic University</p>
+        <p class="contact-line">
+          Taiwan | <a href="mailto:elainelu0813@gmail.com">elainelu0813@gmail.com</a> |
+          <a href="https://github.com/smadonkuan" target="_blank" rel="noopener noreferrer">GitHub</a> |
+          <a href="https://www.linkedin.com/in/elaine-lu-115952392/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </p>
+      </header>
+
+      <section class="resume-section">
+        <h2>Professional Summary</h2>
+        <p>
+          Security researcher focused on Active Directory security, network security, and attack-chain analysis.
+          Experienced in translating technical findings into practical defensive strategies through hands-on labs,
+          write-ups, and implementation-driven projects.
+        </p>
+      </section>
+
+      <section class="resume-section">
+        <h2>Work Experience</h2>
+        <ul>
+          <li>Developed Python-based security automation tools</li>
+          <li>Authored BAS (Breach and Attack Simulation) playbooks and conducted attack simulations</li>
+          <li>Built Windows / Active Directory test environments and validated attack scenarios</li>
+          <li>Deployed and configured EDR solutions; verified detection and protection coverage</li>
+          <li>Developed attack PoCs and end-to-end testing workflows</li>
+          <li>Authored technical documentation and testing reports</li>
+          <li>Mentored interns and collaborated on testing workflow design</li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>Core Skills</h2>
+        <ul>
+          <li>Security Domains: Active Directory Security, DNS Security, Threat Analysis, Red Teaming Basics</li>
+          <li>Programming: Python, Java, PHP, JavaScript</li>
+          <li>Systems and Networking: Linux, TCP/IP, Subnetting, Basic System Hardening</li>
+          <li>Workflow: Technical Research, Documentation, Reproducible Security Notes</li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>Featured Research &amp; Projects</h2>
+        <ul>
+          <li>
+            <strong>Active Directory Attack Lab</strong><br />
+            Built a Windows AD test environment to simulate privilege escalation, lateral movement, and common internal attack flows.
+          </li>
+          <li>
+            <strong>DNS Spoofing &amp; Kerberos Research</strong><br />
+            Researched DNS Spoofing and Kerberos abuse paths; documented authentication-related attack flows and defenses.
+          </li>
+          <li>
+            <strong>Conpot Honeypot Research</strong><br />
+            Deployed an industrial-control honeypot environment to observe scanning and interaction behaviors on ICS / SCADA protocols.
+          </li>
+          <li>
+            <strong>Security Automation</strong><br />
+            Built Python automation tools for security testing, data processing, and analysis.
+          </li>
+        </ul>
+      </section>
+
+      <section class="resume-section">
+        <h2>Languages</h2>
+        <ul>
+          <li>Mandarin Chinese: Native</li>
+          <li>English: Professional working proficiency</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="pdf-templates" aria-hidden="true">
+      <div id="resume-pdf-en" class="pdf-template">
+        <header class="pdf-header">
+          <h1>Elaine Lu</h1>
+          <p class="pdf-headline">Program in Artificial Intelligence and Information Security, Fu Jen Catholic University</p>
+          <p class="pdf-contact">
+            Taiwan | elainelu0813@gmail.com | GitHub: github.com/smadonkuan | LinkedIn: linkedin.com/in/elaine-lu-115952392
+          </p>
+        </header>
+
+        <section class="pdf-section">
+          <h2>Professional Summary</h2>
+          <p>
+            Security researcher focused on Active Directory security, network security, and attack-chain analysis.
+            Experienced in translating technical findings into practical defensive strategies through hands-on labs,
+            write-ups, and implementation-driven projects.
+          </p>
+        </section>
+
+        <section class="pdf-section">
+          <h2>Work Experience</h2>
+          <ul>
+            <li>Developed Python-based security automation tools</li>
+            <li>Authored BAS (Breach and Attack Simulation) playbooks and conducted attack simulations</li>
+            <li>Built Windows / Active Directory test environments and validated attack scenarios</li>
+            <li>Deployed and configured EDR solutions; verified detection and protection coverage</li>
+            <li>Developed attack PoCs and end-to-end testing workflows</li>
+            <li>Authored technical documentation and testing reports</li>
+            <li>Mentored interns and collaborated on testing workflow design</li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>Core Skills</h2>
+          <ul>
+            <li>Security Domains: Active Directory Security, DNS Security, Threat Analysis, Red Teaming Basics</li>
+            <li>Programming: Python, Java, PHP, JavaScript</li>
+            <li>Systems and Networking: Linux, TCP/IP, Subnetting, Basic System Hardening</li>
+            <li>Workflow: Technical Research, Documentation, Reproducible Security Notes</li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>Featured Research &amp; Projects</h2>
+          <ul>
+            <li>
+              <strong>Active Directory Attack Lab</strong><br />
+              Built a Windows AD test environment to simulate privilege escalation, lateral movement, and common internal attack flows.
+            </li>
+            <li>
+              <strong>DNS Spoofing &amp; Kerberos Research</strong><br />
+              Researched DNS Spoofing and Kerberos abuse paths; documented authentication-related attack flows and defenses.
+            </li>
+            <li>
+              <strong>Conpot Honeypot Research</strong><br />
+              Deployed an industrial-control honeypot environment to observe scanning and interaction behaviors on ICS / SCADA protocols.
+            </li>
+            <li>
+              <strong>Security Automation</strong><br />
+              Built Python automation tools for security testing, data processing, and analysis.
+            </li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>Languages</h2>
+          <ul>
+            <li>Mandarin Chinese: Native</li>
+            <li>English: Professional working proficiency</li>
+          </ul>
+        </section>
+      </div>
+
+      <div id="resume-pdf-zh" class="pdf-template">
+        <header class="pdf-header">
+          <h1>呂依璇 Elaine Lu</h1>
+          <p class="pdf-headline">輔仁大學 人工智慧與資訊安全學士學位學程</p>
+          <p class="pdf-contact">
+            台灣 | elainelu0813@gmail.com | GitHub: github.com/smadonkuan | LinkedIn: linkedin.com/in/elaine-lu-115952392
+          </p>
+        </header>
+
+        <section class="pdf-section">
+          <h2>個人摘要</h2>
+          <p>
+            主要記錄 Active Directory、企業內網與攻擊模擬相關研究，
+            也會整理實作過程、技術筆記與一些安全測試心得。
+          </p>
+        </section>
+
+        <section class="pdf-section">
+          <h2>工作經歷</h2>
+          <ul>
+            <li>Python 資安自動化工具開發</li>
+            <li>BAS 攻擊劇本撰寫與攻擊模擬</li>
+            <li>Windows／AD 測試環境建置與攻擊驗證</li>
+            <li>EDR 架設、部署與防護驗證</li>
+            <li>攻擊 PoC 與測試流程開發</li>
+            <li>技術文件與測試報告撰寫</li>
+            <li>實習生技術指導與測試流程協作</li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>核心技能</h2>
+          <ul>
+            <li>資安領域：Windows Active Directory Security、DNS Security、威脅分析、Red Teaming 基礎</li>
+            <li>程式語言：Python、Java、PHP、JavaScript</li>
+            <li>系統與網路：Linux、TCP/IP、子網切割、基礎系統強化</li>
+            <li>工作方式：技術研究、文件化整理、可重現的安全筆記</li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>代表研究與專案</h2>
+          <ul>
+            <li>
+              <strong>Active Directory Attack Lab</strong><br />
+              建立 Windows AD 測試環境，模擬權限提升、橫向移動與常見內網攻擊流程。
+            </li>
+            <li>
+              <strong>DNS Spoofing &amp; Kerberos Research</strong><br />
+              研究 DNS Spoofing 與 Kerberos 濫用路徑，整理身份驗證相關攻擊流程與防禦方式。
+            </li>
+            <li>
+              <strong>Conpot Honeypot Research</strong><br />
+              建置工控 honeypot 環境，觀察 ICS/SCADA 協定的掃描與互動行為。
+            </li>
+            <li>
+              <strong>Security Automation</strong><br />
+              使用 Python 撰寫安全測試、資料整理與分析自動化工具。
+            </li>
+          </ul>
+        </section>
+
+        <section class="pdf-section">
+          <h2>語言能力</h2>
+          <ul>
+            <li>中文：母語</li>
+            <li>英文：工作溝通能力</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+</LandingLayout>
+
+<script is:inline>
+  (function () {
+    const langToggleBtn = document.getElementById('lang-toggle-btn');
+    const resumeContentEn = document.getElementById('resume-content-en');
+    const resumeContentZh = document.getElementById('resume-content-zh');
+    if (!langToggleBtn || !resumeContentEn || !resumeContentZh) return;
+    langToggleBtn.addEventListener('click', () => {
+      const showingZh = !resumeContentZh.hidden;
+      resumeContentZh.hidden = showingZh;
+      resumeContentEn.hidden = !showingZh;
+      langToggleBtn.textContent = showingZh ? '中文' : 'English';
+    });
+  })();
+</script>
+
+<script type="module">
+  import html2canvas from 'https://esm.sh/html2canvas@1.4.1';
+  import { jsPDF } from 'https://esm.sh/jspdf@4.2.1';
+
+  const downloadPdfEnButton = document.getElementById('download-pdf-en-btn');
+  const downloadPdfZhButton = document.getElementById('download-pdf-zh-btn');
+  const resumePdfEn = document.getElementById('resume-pdf-en');
+  const resumePdfZh = document.getElementById('resume-pdf-zh');
+
+  async function generatePdf(targetElement, buttonElement, filename) {
+    if (!targetElement || !buttonElement) return;
+
+    const originalText = buttonElement.textContent;
+    buttonElement.textContent = 'Generating...';
+    buttonElement.setAttribute('disabled', 'true');
+
+    try {
+      const canvas = await html2canvas(targetElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'pt',
+        format: 'a4',
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 24;
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgData = canvas.toDataURL('image/png');
+
+      let heightLeft = imgHeight;
+      let position = margin;
+
+      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+      heightLeft -= pageHeight - margin * 2;
+
+      while (heightLeft > 0) {
+        position = margin - (imgHeight - heightLeft);
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= pageHeight - margin * 2;
+      }
+
+      pdf.save(filename);
+    } finally {
+      buttonElement.removeAttribute('disabled');
+      buttonElement.textContent = originalText ?? 'Download PDF';
+    }
+  }
+
+  downloadPdfEnButton?.addEventListener('click', () => {
+    generatePdf(resumePdfEn, downloadPdfEnButton, 'elainelu_resume_EN.pdf');
+  });
+
+  downloadPdfZhButton?.addEventListener('click', () => {
+    generatePdf(resumePdfZh, downloadPdfZhButton, '呂依璇_履歷_ZH.pdf');
+  });
+</script>
+
+<style>
+  .resume-page {
+    --resume-accent: #4a63d8;
+    --resume-accent-strong: #2f3eb0;
+    --resume-text: #1d1d1f;
+    --resume-text-soft: #4b5060;
+    --resume-text-muted: #6b6b6b;
+    --resume-border: rgba(0, 0, 0, 0.1);
+    --resume-surface: rgba(255, 255, 255, 0.7);
+    max-width: 820px;
+    margin: 0;
+    padding: 8px 0 24px;
+    color: var(--resume-text);
+  }
+
+  .resume-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .resume-action-link,
+  .resume-download-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--resume-border);
+    color: var(--resume-accent-strong);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .resume-action-link:hover,
+  .resume-download-btn:hover {
+    border-color: rgba(74, 99, 216, 0.6);
+    background: rgba(74, 99, 216, 0.08);
+    color: #1d1d1f;
+  }
+
+  .resume-content {
+    border: 1px solid var(--resume-border);
+    border-radius: 14px;
+    background: var(--resume-surface);
+    padding: clamp(18px, 2.6vw, 28px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  }
+
+  .resume-header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.1;
+  }
+
+  .headline {
+    margin: 10px 0 8px;
+    color: var(--resume-text-soft);
+    font-size: 1rem;
+  }
+
+  .contact-line {
+    margin: 0;
+    color: var(--resume-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  .contact-line a {
+    color: var(--resume-accent-strong);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(191, 208, 255, 0.35);
+  }
+
+  .resume-section {
+    margin-top: 26px;
+    padding-top: 16px;
+    border-top: 1px solid var(--resume-border);
+  }
+
+  .resume-section h2 {
+    margin: 0 0 10px;
+    font-size: 1.03rem;
+    letter-spacing: 0.04em;
+    color: var(--resume-accent);
+    text-transform: uppercase;
+  }
+
+  .resume-section p,
+  .resume-section li {
+    color: var(--resume-text);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  .resume-section ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .resume-section li {
+    margin-bottom: 10px;
+  }
+
+  .resume-download-btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .pdf-templates {
+    position: fixed;
+    left: -99999px;
+    top: 0;
+    width: 794px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .pdf-template {
+    width: 794px;
+    background: #ffffff;
+    color: #111111;
+    padding: 36px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+
+  .pdf-header h1 {
+    margin: 0;
+    font-size: 34px;
+    line-height: 1.2;
+  }
+
+  .pdf-headline {
+    margin: 10px 0 8px;
+    color: #333333;
+    font-size: 16px;
+  }
+
+  .pdf-contact {
+    margin: 0;
+    color: #444444;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .pdf-section {
+    margin-top: 24px;
+    padding-top: 14px;
+    border-top: 1px solid #d8d8d8;
+  }
+
+  .pdf-section h2 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    color: #111111;
+    text-transform: uppercase;
+  }
+
+  .pdf-section p,
+  .pdf-section li {
+    color: #111111;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  .pdf-section ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .pdf-section li {
+    margin-bottom: 8px;
+  }
+
+  @media print {
+    :global(body) {
+      background: #fff !important;
+      color: #111 !important;
+      font-family: Arial, sans-serif;
+    }
+
+    .no-print,
+    :global(.landing-top-nav) {
+      display: none !important;
+    }
+
+    .resume-page {
+      max-width: 100%;
+      color: #111 !important;
+      padding: 0;
+    }
+
+    .resume-header h1,
+    .headline,
+    .contact-line,
+    .resume-section h2,
+    .resume-section p,
+    .resume-section li {
+      color: #111 !important;
+    }
+
+    .resume-section {
+      border-top: 1px solid #ddd;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .contact-line a {
+      color: #111 !important;
+      border-bottom: none !important;
+      text-decoration: none !important;
+    }
+  }
+</style>

@@ -11,6 +11,8 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.15",
     "astro": "^5.16.15",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0"
   }

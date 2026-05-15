@@ -3,9 +3,10 @@ import type { GithubRepo } from '../utils/github';
 
 interface Props {
   repo: GithubRepo;
+  class?: string;
 }
 
-const { repo } = Astro.props;
+const { repo, class: className } = Astro.props;
 
 // Language colors mapping
 const langColors: Record<string, string> = {
@@ -23,7 +24,6 @@ const langColors: Record<string, string> = {
 
 const langColor = repo.language ? (langColors[repo.language] || langColors.default) : langColors.default;
 
-// Format date
 const lastUpdated = new Date(repo.updated_at).toLocaleDateString('zh-TW', {
     year: 'numeric',
     month: 'short',
@@ -31,7 +31,7 @@ const lastUpdated = new Date(repo.updated_at).toLocaleDateString('zh-TW', {
 });
 ---
 
-<a href={repo.html_url} target="_blank" rel="noopener noreferrer" class="project-card">
+<a href={repo.html_url} target="_blank" rel="noopener noreferrer" class={`project-card reveal reveal-up ${className || ''}`}>
   <div class="card-header">
     <h3>
       <span class="repo-icon">📂</span>
@@ -68,7 +68,6 @@ const lastUpdated = new Date(repo.updated_at).toLocaleDateString('zh-TW', {
     overflow: hidden;
   }
 
-  /* Glassmorphism/Premium hover effect */
   .project-card:hover {
     transform: translateY(-4px);
     border-color: #1A3A52;

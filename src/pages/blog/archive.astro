@@ -1,5 +1,5 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
+import LandingLayout from '../../layouts/LandingLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = (await getCollection('posts'))
@@ -28,7 +28,7 @@ function formatDate(dateStr: string) {
 }
 ---
 
-<MainLayout title="文章彙整 - 呂依璇 Elaine Lu" currentPath="/blog">
+<LandingLayout title="文章彙整 - 呂依璇 Elaine Lu" currentPath="/blog">
   <div class="post">
     <div class="archive-header">
       <h1 class="section-title">文章彙整</h1>
@@ -61,7 +61,7 @@ function formatDate(dateStr: string) {
       </div>
     )}
   </div>
-</MainLayout>
+</LandingLayout>
 
 <style>
   .archive-header {

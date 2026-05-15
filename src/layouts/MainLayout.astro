@@ -126,7 +126,7 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
 
     <!-- 主內容 -->
     <main>
-      <div class="nav-tabs">
+      <div class="nav-tabs reveal reveal-down">
         <div class="nav-links">
           {navItems.map(item => (
             <a href={item.path} class={`nav-tab ${currentPath === item.path ? 'active' : ''}`}>
@@ -194,11 +194,36 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
       });
     }
 
+    // Scroll Reveal Intersection Observer
+    function initScrollReveal() {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // 一旦顯示後就停止觀察，避免重複觸發
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const revealElements = document.querySelectorAll('.reveal');
+      revealElements.forEach(el => observer.observe(el));
+    }
+
     // Run on initial load
     initMobileMenu();
+    initScrollReveal();
 
     // Run on view transitions navigation
-    document.addEventListener('astro:after-swap', initMobileMenu);
+    document.addEventListener('astro:after-swap', () => {
+      initMobileMenu();
+      initScrollReveal();
+    });
 
     // 鍵盤快捷鍵：/ 聚焦搜尋、Esc 關閉選單
     function isInputOrTextarea(el) {

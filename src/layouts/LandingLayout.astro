@@ -1,0 +1,201 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  currentPath?: string;
+  description?: string;
+}
+
+const {
+  title = 'Elaine Lu',
+  currentPath = '/',
+  description = 'Cybersecurity Researcher',
+} = Astro.props;
+
+const navItems = [
+  { name: 'Projects', path: '/projects' },
+  { name: 'About', path: '/about' },
+  { name: 'Blog', path: '/blog' },
+  { name: 'Contact', path: '/contact' },
+];
+---
+
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="landing-body">
+    <div class="landing-shell">
+      <header class="landing-top-nav">
+        <a href="/" class="landing-home-btn" aria-label="回到主頁">← Home</a>
+        <nav class="landing-nav-links" aria-label="Main navigation">
+          {navItems.map((item) => (
+            <a href={item.path} class:list={['landing-nav-link', currentPath === item.path && 'active']}>
+              {item.name}
+            </a>
+          ))}
+        </nav>
+      </header>
+
+      <main class="landing-main">
+        <slot />
+      </main>
+    </div>
+    <script>
+      function initScrollReveal() {
+        const revealElements = document.querySelectorAll('.reveal');
+        if (!revealElements.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+          revealElements.forEach((el) => el.classList.add('active'));
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('active');
+            obs.unobserve(entry.target);
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px',
+        });
+
+        revealElements.forEach((el) => observer.observe(el));
+      }
+
+      initScrollReveal();
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(.landing-body) {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'JetBrains Mono', 'SFMono-Regular', 'Consolas', 'Menlo', monospace;
+    background: linear-gradient(to bottom, #f5f5f3, #ececea);
+    color: #111827;
+    overflow-x: hidden;
+  }
+
+  .landing-shell {
+    min-height: 100vh;
+    width: min(1080px, 100%);
+    margin: 0 auto;
+    padding: clamp(18px, 3vw, 34px) clamp(16px, 3vw, 30px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .landing-top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: clamp(1.2rem, 3vw, 2.2rem);
+  }
+
+  .landing-home-btn {
+    color: #515561;
+    text-decoration: none;
+    font-size: 0.76rem;
+    letter-spacing: 0.03em;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 999px;
+    padding: 4px 10px;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .landing-home-btn:hover {
+    color: #1d1d1f;
+    border-color: #1d1d1f;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .landing-nav-links {
+    display: flex;
+    gap: clamp(0.8rem, 2vw, 1.3rem);
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .landing-nav-link {
+    color: #515561;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .landing-nav-link:hover,
+  .landing-nav-link.active {
+    color: #1d1d1f;
+    border-color: #1d1d1f;
+  }
+
+  .landing-main :global(.page),
+  .landing-main :global(.post) {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 680px) {
+    .landing-shell {
+      padding-top: 12px;
+    }
+
+    .landing-top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin-bottom: 1rem;
+      padding: 8px 10px;
+      background: #f5f5f3;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .landing-nav-links {
+      width: auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      gap: 0.9rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .landing-nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .landing-nav-link {
+      white-space: nowrap;
+      padding: 4px 0;
+    }
+
+    .landing-home-btn {
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .landing-shell {
+      padding: 10px 14px 24px;
+    }
+  }
+</style>

@@ -1,0 +1,304 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+---
+
+<LandingLayout
+  title="About - 呂依璇 Elaine Lu"
+  currentPath="/about"
+  description="關於呂依璇 Elaine Lu 的背景與研究方向。"
+>
+  <section class="about-page reveal reveal-up">
+    <p class="about-kicker">ABOUT</p>
+    <h1 class="about-title" data-typewriter="呂依璇 Elaine Lu"><span class="typewriter-text"></span><span class="typewriter-caret" aria-hidden="true"></span></h1>
+    <div class="about-content">
+      <p>主要研究 Active Directory、企業內網與攻擊模擬相關主題。</p>
+      <p>這裡主要記錄一些研究筆記、技術觀察與實驗過程。</p>
+    </div>
+
+    <div class="terminal-prompt" id="terminal-prompt" aria-live="polite" hidden>
+      <span class="terminal-prefix">&gt;</span><span class="terminal-text"></span><span class="terminal-caret" aria-hidden="true"></span>
+    </div>
+
+    <div class="about-meta">
+      <div class="about-meta-item">
+        <span class="label">Focus</span>
+        <div class="value focus-stack">
+          <div>AD Security · Enterprise Networks · Attack Simulation</div>
+          <div class="focus-tools">Python Automation · Windows Infrastructure</div>
+        </div>
+      </div>
+      <div class="about-meta-item">
+        <span class="label">Contact</span>
+        <a class="value link" href="/contact">聯絡我</a>
+      </div>
+      <div class="about-meta-item">
+        <span class="label">Resume</span>
+        <a class="value link" href="/resume">履歷 Resume（PDF）</a>
+      </div>
+      <div class="about-meta-item">
+        <span class="label">實習</span>
+        <span class="value">盧氪賽忒股份有限公司｜H1DRA Security 部門｜資安實習研究員（2024/09 - 2025/06）</span>
+      </div>
+      <div class="about-meta-item">
+        <span class="label">正職</span>
+        <span class="value">盧氪賽忒股份有限公司｜H1DRA Security 部門｜資安研究員（2025/07 - 至今）</span>
+      </div>
+    </div>
+  </section>
+</LandingLayout>
+
+<script is:inline>
+  (function () {
+    const el = document.querySelector('.about-title');
+    if (!el) return;
+    const text = el.dataset.typewriter || '';
+    const textNode = el.querySelector('.typewriter-text');
+    if (!textNode || !text) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      textNode.textContent = text;
+      return;
+    }
+    const typeSpeed = 95;
+    const eraseSpeed = 55;
+    const holdFull = 1600;
+    const holdEmpty = 500;
+    let i = 0;
+    let typing = true;
+    function tick() {
+      if (typing) {
+        if (i < text.length) {
+          textNode.textContent = text.slice(0, ++i);
+          setTimeout(tick, typeSpeed);
+        } else {
+          typing = false;
+          setTimeout(tick, holdFull);
+        }
+      } else {
+        if (i > 0) {
+          textNode.textContent = text.slice(0, --i);
+          setTimeout(tick, eraseSpeed);
+        } else {
+          typing = true;
+          setTimeout(tick, holdEmpty);
+        }
+      }
+    }
+    setTimeout(tick, 250);
+  })();
+
+  (function () {
+    const prompt = document.getElementById('terminal-prompt');
+    if (!prompt) return;
+    const textEl = prompt.querySelector('.terminal-text');
+    if (!textEl) return;
+
+    const message = ' still here? 看看最近寫的 → ';
+    const linkText = 'AD 域滲透：DNS Spoofing 攻擊鏈深度分析';
+    const linkHref = '/posts/ad-dns-spoofing-attack-chain-analysis';
+    const delayBeforeShow = 30000;
+    const typeSpeed = 55;
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function start() {
+      prompt.removeAttribute('hidden');
+      if (reduced) {
+        textEl.textContent = message;
+        const link = document.createElement('a');
+        link.href = linkHref;
+        link.className = 'terminal-link';
+        link.textContent = linkText;
+        textEl.appendChild(link);
+        return;
+      }
+      let i = 0;
+      const link = document.createElement('a');
+      link.href = linkHref;
+      link.className = 'terminal-link';
+      function typeMsg() {
+        if (i < message.length) {
+          textEl.textContent = message.slice(0, ++i);
+          setTimeout(typeMsg, typeSpeed);
+        } else {
+          textEl.appendChild(link);
+          let j = 0;
+          function typeLink() {
+            if (j < linkText.length) {
+              link.textContent = linkText.slice(0, ++j);
+              setTimeout(typeLink, typeSpeed);
+            }
+          }
+          typeLink();
+        }
+      }
+      typeMsg();
+    }
+
+    setTimeout(start, delayBeforeShow);
+  })();
+</script>
+
+<style>
+  .about-page {
+    max-width: 760px;
+    margin: 0;
+    padding: 10px 0 24px;
+  }
+
+  .about-kicker {
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    color: #4a63d8;
+    margin: 0 0 10px;
+  }
+
+  .about-title {
+    margin: 0 0 24px;
+    font-family: 'JetBrains Mono', 'SFMono-Regular', 'Consolas', 'Menlo', monospace;
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: baseline;
+    min-height: 1.1em;
+  }
+
+  .typewriter-caret {
+    display: inline-block;
+    width: 0.08em;
+    height: 0.95em;
+    background: currentColor;
+    margin-left: 0.08em;
+    transform: translateY(0.06em);
+    animation: caret-blink 0.85s step-end infinite;
+  }
+
+  @keyframes caret-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-caret { animation: none; }
+    .terminal-caret { animation: none; }
+    .terminal-prompt { opacity: 1; }
+  }
+
+  .terminal-prompt {
+    margin: 20px 0 0;
+    font-family: 'JetBrains Mono', 'SFMono-Regular', 'Consolas', 'Menlo', monospace;
+    font-size: 0.92rem;
+    color: #4b5060;
+    line-height: 1.6;
+    opacity: 0;
+    animation: terminal-fade-in 0.4s ease forwards;
+    word-break: break-all;
+  }
+
+  .terminal-prompt[hidden] {
+    display: none;
+  }
+
+  .terminal-prefix {
+    color: #4a63d8;
+    margin-right: 6px;
+    font-weight: 600;
+  }
+
+  .terminal-link {
+    color: #4a63d8;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(74, 99, 216, 0.4);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .terminal-link:hover {
+    color: #2f3eb0;
+    border-color: #2f3eb0;
+  }
+
+  .terminal-caret {
+    display: inline-block;
+    width: 0.08em;
+    height: 0.95em;
+    background: currentColor;
+    margin-left: 0.1em;
+    vertical-align: middle;
+    animation: caret-blink 0.85s step-end infinite;
+  }
+
+  @keyframes terminal-fade-in {
+    to { opacity: 1; }
+  }
+
+  .about-content p {
+    margin: 0 0 16px;
+    color: #2e2e30;
+    line-height: 1.8;
+    font-size: 0.98rem;
+  }
+
+  .about-meta {
+    margin-top: 44px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 32px;
+    display: grid;
+    gap: 24px;
+  }
+
+  .about-meta-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .about-meta-item .label {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: #6b6b6b;
+    text-transform: uppercase;
+  }
+
+  .about-meta-item .value {
+    color: #1d1d1f;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .focus-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .focus-stack .focus-tools {
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  .about-meta-item .link {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(74, 99, 216, 0.35);
+    justify-self: start;
+  }
+
+  .about-meta-item .link:hover {
+    color: #4a63d8;
+    border-color: #4a63d8;
+  }
+
+  @media (max-width: 680px) {
+    .about-page {
+      padding-top: 4px;
+    }
+
+    .about-meta-item {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

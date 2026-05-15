@@ -247,7 +247,6 @@ const serializablePosts = posts.map(post => ({
     background: #fff;
     border-color: #E8714C;
     box-shadow: 0 0 0 2px rgba(232, 113, 76, 0.1);
-    /* Removed width expansion to prevent layout shift */
   }
 
   .search-results {
@@ -262,7 +261,7 @@ const serializablePosts = posts.map(post => ({
     max-height: 400px;
     overflow-y: auto;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 9999; /* Ensure it floats on top of everything */
+    z-index: 9999;
   }
   
   /* Custom Scrollbar for results */
